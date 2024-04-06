@@ -2,16 +2,22 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 
 import { REGISTER_USER } from "./actionTypes"
 import { registerUserSuccessful, registerUserFailed } from "./actions"
-import { register } from "../../../helpers/auth_helper";
+import { login, register } from "../../../helpers/auth_helper"
+import { loginSuccess } from "../login/actions";
 
-function* registerUser({ payload: { user,history } }) {
+function* registerUser({ payload: { user,history} }) {
   try {
      if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      console.log(user);
       const response = yield call(register, user);
-      console.log(response);
       yield put(registerUserSuccessful(response));
-       history('/login');
+       const res = yield call(login, {
+         email: user.email,
+         password: user.password,
+       });
+       localStorage.setItem("authUser", res.data.token);
+       localStorage.setItem("user", JSON.stringify(res.data.user));
+       yield put(loginSuccess(response));
+       history('/dashboard');
      }
   } catch (error) {
     yield put(registerUserFailed(error))

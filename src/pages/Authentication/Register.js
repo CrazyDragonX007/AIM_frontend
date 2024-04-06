@@ -18,7 +18,7 @@ import { Alert, Card, CardBody, Col, Container, Form, FormFeedback, Input, Label
 
 const Register = () => {
   //meta title
-  document.title = "Register | Skote - React Admin & Dashboard Template";
+  document.title = "Register | AIM - All in one Manager";
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
