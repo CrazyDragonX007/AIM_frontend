@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import React, { useState } from "react"
 
 import { connect } from "react-redux"
@@ -6,11 +6,7 @@ import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 
 // Reactstrap
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap"
-
 // Import menuDropdown
-import LanguageDropdown from "../CommonForBoth/TopbarDropdown/LanguageDropdown"
-import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDropdown"
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 
 // import megamenuImg from "../../assets/images/megamenu-img.png"
@@ -22,33 +18,23 @@ import logoDark from "../../assets/images/logo-dark.png"
 import { withTranslation } from "react-i18next"
 
 // Redux Store
-import {
-  showRightSidebarAction,
-  toggleLeftmenu,
-  changeSidebarType,
-} from "../../store/actions"
+import { changeSidebarType, showRightSidebarAction, toggleLeftmenu } from "../../store/actions"
 
 const Header = props => {
   const [search, setsearch] = useState(false)
-  const [createmenu, setCreateMenu] = useState(false)
+  // const [createmenu, setCreateMenu] = useState(false)
 
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   function toggleFullscreen() {
-    if (
-      !document.fullscreenElement &&
-      /* alternative standard method */ !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement
-    ) {
+    if (!document.fullscreenElement && /* alternative standard method */ !document.mozFullScreenElement && !document.webkitFullscreenElement) {
       // current working methods
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen()
       } else if (document.documentElement.mozRequestFullScreen) {
         document.documentElement.mozRequestFullScreen()
       } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(
-          Element.ALLOW_KEYBOARD_INPUT
-        )
+        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
       }
     } else {
       if (document.cancelFullScreen) {
@@ -62,12 +48,12 @@ const Header = props => {
   }
 
   function tToggle() {
-    var body = document.body;
-    body.classList.toggle("vertical-collpsed");
-    body.classList.toggle("sidebar-enable");
+    var body = document.body
+    body.classList.toggle("vertical-collpsed")
+    body.classList.toggle("sidebar-enable")
   }
-  return (
-    <React.Fragment>
+
+  return (<React.Fragment>
       <header id="page-topbar">
         <div className="navbar-header">
           <div className="d-flex">
@@ -101,45 +87,45 @@ const Header = props => {
             >
               <i className="mdi mdi-menu"></i>
             </button>
-            <div className="d-none d-sm-block">
-              <Dropdown
-                isOpen={createmenu}
-                toggle={() => setCreateMenu(!createmenu)}
-                className="d-inline-block"
-              >
+            {/*<div className="d-none d-sm-block">*/}
+            {/*<Dropdown*/}
+            {/*  isOpen={createmenu}*/}
+            {/*  toggle={() => setCreateMenu(!createmenu)}*/}
+            {/*  className="d-inline-block"*/}
+            {/*>*/}
 
-                <div className="dropdown dropdown-topbar pt-3 mt-1 d-inline-block">
+            {/*  <div className="dropdown dropdown-topbar pt-3 mt-1 d-inline-block">*/}
 
-                  <DropdownToggle
-                    className="btn btn-light"
-                    tag="button"
-                  >
-                    Create <i className="mdi mdi-chevron-down"></i>
-                  </DropdownToggle>
+            {/*    <DropdownToggle*/}
+            {/*      className="btn btn-light"*/}
+            {/*      tag="button"*/}
+            {/*    >*/}
+            {/*      Create <i className="mdi mdi-chevron-down"></i>*/}
+            {/*    </DropdownToggle>*/}
 
-                  <DropdownMenu className="dropdown-menu-end">
-                    <DropdownItem tag="a" href="#">Action</DropdownItem>
-                    <DropdownItem tag="a" href="#">Another action</DropdownItem>
-                    <DropdownItem tag="a" href="#">Something else here</DropdownItem>
-                    <div className="dropdown-divider"></div>
-                    <DropdownItem tag="a" href="#">Separated link</DropdownItem>
-                  </DropdownMenu>
+            {/*    <DropdownMenu className="dropdown-menu-end">*/}
+            {/*      <DropdownItem tag="a" href="#">Action</DropdownItem>*/}
+            {/*      <DropdownItem tag="a" href="#">Another action</DropdownItem>*/}
+            {/*      <DropdownItem tag="a" href="#">Something else here</DropdownItem>*/}
+            {/*      <div className="dropdown-divider"></div>*/}
+            {/*      <DropdownItem tag="a" href="#">Separated link</DropdownItem>*/}
+            {/*    </DropdownMenu>*/}
 
-                </div>
-              </Dropdown>
-            </div>
+            {/*  </div>*/}
+            {/*</Dropdown>*/}
+            {/*</div>*/}
           </div>
           <div className="d-flex">
-            <form className="app-search d-none d-lg-block">
-              <div className="position-relative">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={props.t("Search") + "..."}
-                />
-                <span className="fa fa-search"></span>
-              </div>
-            </form>
+            {/*<form className="app-search d-none d-lg-block">*/}
+            {/*  <div className="position-relative">*/}
+            {/*    <input*/}
+            {/*      type="text"*/}
+            {/*      className="form-control"*/}
+            {/*      placeholder={props.t("Search") + "..."}*/}
+            {/*    />*/}
+            {/*    <span className="fa fa-search"></span>*/}
+            {/*  </div>*/}
+            {/*</form>*/}
             <div className="dropdown d-inline-block d-lg-none ms-2">
               <button
                 onClick={() => {
@@ -152,11 +138,7 @@ const Header = props => {
                 <i className="mdi mdi-magnify" />
               </button>
               <div
-                className={
-                  search
-                    ? "dropdown-menu dropdown-menu-lg dropdown-menu-right p-0 show"
-                    : "dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
-                }
+                className={search ? "dropdown-menu dropdown-menu-lg dropdown-menu-right p-0 show" : "dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"}
                 aria-labelledby="page-header-search-dropdown"
               >
                 <form className="p-3">
@@ -178,7 +160,7 @@ const Header = props => {
                 </form>
               </div>
             </div>
-            <LanguageDropdown />
+            {/*<LanguageDropdown />*/}
             <div className="dropdown d-none d-lg-inline-block">
               <button
                 type="button"
@@ -191,7 +173,7 @@ const Header = props => {
                 <i className="mdi mdi-fullscreen font-size-24"></i>
               </button>
             </div>
-            <NotificationDropdown />
+            {/*<NotificationDropdown />*/}
             <ProfileMenu />
             <div
               onClick={() => {
@@ -209,8 +191,7 @@ const Header = props => {
           </div>
         </div>
       </header>
-    </React.Fragment>
-  )
+    </React.Fragment>)
 }
 
 Header.propTypes = {
@@ -225,16 +206,11 @@ Header.propTypes = {
 
 const mapStatetoProps = state => {
   const {
-    layoutType,
-    showRightSidebar,
-    leftMenu,
-    leftSideBarType,
+    layoutType, showRightSidebar, leftMenu, leftSideBarType
   } = state.Layout
   return { layoutType, showRightSidebar, leftMenu, leftSideBarType }
 }
 
 export default connect(mapStatetoProps, {
-  showRightSidebarAction,
-  toggleLeftmenu,
-  changeSidebarType,
+  showRightSidebarAction, toggleLeftmenu, changeSidebarType
 })(withTranslation()(Header))

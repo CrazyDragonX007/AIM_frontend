@@ -1,18 +1,17 @@
 import React from "react"
-import PropTypes from 'prop-types'
-import { FormGroup } from "reactstrap"
+import PropTypes from "prop-types"
 
 import { connect } from "react-redux"
 import {
+  changeColor,
   changeLayout,
   changeLayoutWidth,
+  changeMode,
+  changePreloader,
   changeSidebarTheme,
   changeSidebarType,
-  changePreloader,
   changeTopbarTheme,
-  showRightSidebarAction,
-  changeColor,
-  changeMode
+  showRightSidebarAction
 } from "../../store/actions"
 
 //SimpleBar
@@ -22,9 +21,6 @@ import { Link } from "react-router-dom"
 
 import "../../components/CommonForBoth/rightbar.scss"
 //Import images
-import layout1 from "../../assets/images/layouts/layout-1.jpg"
-import layout2 from "../../assets/images/layouts/layout-2.jpg"
-import layout3 from "../../assets/images/layouts/layout-3.jpg"
 
 const RightSidebar = props => {
   return (
@@ -50,86 +46,86 @@ const RightSidebar = props => {
 
             <div className="p-4">
 
-              <div className="radio-toolbar">
-                <span className="mb-2 d-block" id="radio-title">
-                  Select Custom Colors
-                </span>
+              {/*<div className="radio-toolbar">*/}
+              {/*  <span className="mb-2 d-block" id="radio-title">*/}
+              {/*    Select Custom Colors*/}
+              {/*  </span>*/}
 
-                <input
-                  type="radio"
-                  id="colorDefault"
-                  name="colorType"
-                  value="default"
-                  checked={props.layoutColor === "default"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeColor(e.target.value)
-                    }
-                  }}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="colorDefault"*/}
+              {/*    name="colorType"*/}
+              {/*    value="default"*/}
+              {/*    checked={props.layoutColor === "default"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeColor(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
 
-                />
-                <label htmlFor="colorDefault">Default</label>
-                {"   "}
-                <input
-                  id="colorRed"
-                  type="radio"
-                  name="colorType"
-                  value="red"
-                  checked={props.layoutColor === "red"}
+              {/*  />*/}
+              {/*  <label htmlFor="colorDefault">Default</label>*/}
+              {/*  {"   "}*/}
+              {/*  <input*/}
+              {/*    id="colorRed"*/}
+              {/*    type="radio"*/}
+              {/*    name="colorType"*/}
+              {/*    value="red"*/}
+              {/*    checked={props.layoutColor === "red"}*/}
 
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeColor(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="colorRed">Red</label>
-                {"   "}
-                <input
-                  type="radio"
-                  id="colorTeal"
-                  name="colorType"
-                  value="teal"
-                  checked={props.layoutColor === "teal"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeColor(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="colorTeal">Teal</label>
-              </div>
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeColor(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="colorRed">Red</label>*/}
+              {/*  {"   "}*/}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="colorTeal"*/}
+              {/*    name="colorType"*/}
+              {/*    value="teal"*/}
+              {/*    checked={props.layoutColor === "teal"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeColor(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="colorTeal">Teal</label>*/}
+              {/*</div>*/}
 
-              <div className="radio-toolbar">
-                <span className="mb-2 d-block">Layouts</span>
-                <input
-                  type="radio"
-                  id="radioVertical"
-                  name="radioFruit"
-                  value="vertical"
-                  checked={props.layoutType === "vertical"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayout(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="radioVertical">Vertical</label>
-                {"   "}
-                <input
-                  type="radio"
-                  id="radioHorizontal"
-                  name="radioFruit"
-                  value="horizontal"
-                  checked={props.layoutType === "horizontal"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayout(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="radioHorizontal">Horizontal</label>
-              </div>
+              {/*<div className="radio-toolbar">*/}
+              {/*  <span className="mb-2 d-block">Layouts</span>*/}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="radioVertical"*/}
+              {/*    name="radioFruit"*/}
+              {/*    value="vertical"*/}
+              {/*    checked={props.layoutType === "vertical"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeLayout(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="radioVertical">Vertical</label>*/}
+              {/*  {"   "}*/}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="radioHorizontal"*/}
+              {/*    name="radioFruit"*/}
+              {/*    value="horizontal"*/}
+              {/*    checked={props.layoutType === "horizontal"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeLayout(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="radioHorizontal">Horizontal</label>*/}
+              {/*</div>*/}
 
               <div className="radio-toolbar">
                 <span className="mb-2 d-block">Mode</span>
@@ -162,40 +158,40 @@ const RightSidebar = props => {
                 <label htmlFor="radioDark">Dark</label>
               </div>
 
-              <hr className="mt-1" />
+              {/*<hr className="mt-1" />*/}
 
-              <div className="radio-toolbar">
-                <span className="mb-2 d-block" id="radio-title">
-                  Layout Width
-                </span>
-                <input
-                  type="radio"
-                  id="radioFluid"
-                  name="radioWidth"
-                  value="fluid"
-                  checked={props.layoutWidth === "fluid"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayoutWidth(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="radioFluid">Fluid</label>
-                {"   "}
-                <input
-                  type="radio"
-                  id="radioBoxed"
-                  name="radioWidth"
-                  value="boxed"
-                  checked={props.layoutWidth === "boxed"}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayoutWidth(e.target.value)
-                    }
-                  }}
-                />
-                <label htmlFor="radioBoxed">Boxed</label>
-              </div>
+              {/*<div className="radio-toolbar">*/}
+              {/*  <span className="mb-2 d-block" id="radio-title">*/}
+              {/*    Layout Width*/}
+              {/*  </span>*/}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="radioFluid"*/}
+              {/*    name="radioWidth"*/}
+              {/*    value="fluid"*/}
+              {/*    checked={props.layoutWidth === "fluid"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeLayoutWidth(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="radioFluid">Fluid</label>*/}
+              {/*  {"   "}*/}
+              {/*  <input*/}
+              {/*    type="radio"*/}
+              {/*    id="radioBoxed"*/}
+              {/*    name="radioWidth"*/}
+              {/*    value="boxed"*/}
+              {/*    checked={props.layoutWidth === "boxed"}*/}
+              {/*    onChange={e => {*/}
+              {/*      if (e.target.checked) {*/}
+              {/*        props.changeLayoutWidth(e.target.value)*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <label htmlFor="radioBoxed">Boxed</label>*/}
+              {/*</div>*/}
               <hr className="mt-1" />
 
               <div className="radio-toolbar">
@@ -318,89 +314,89 @@ const RightSidebar = props => {
 
                     <label htmlFor="leftsidebarThemedark">Dark</label>
                     {"   "}
-                    <input
-                      type="radio"
-                      id="leftsidebarThemecolored"
-                      name="leftsidebarTheme"
-                      value="colored"
-                      checked={props.leftSideBarTheme === "colored"}
-                      onChange={e => {
-                        if (e.target.checked) {
-                          props.changeSidebarTheme(e.target.value)
-                        }
-                      }}
-                    />
+                    {/*<input*/}
+                    {/*  type="radio"*/}
+                    {/*  id="leftsidebarThemecolored"*/}
+                    {/*  name="leftsidebarTheme"*/}
+                    {/*  value="colored"*/}
+                    {/*  checked={props.leftSideBarTheme === "colored"}*/}
+                    {/*  onChange={e => {*/}
+                    {/*    if (e.target.checked) {*/}
+                    {/*      props.changeSidebarTheme(e.target.value)*/}
+                    {/*    }*/}
+                    {/*  }}*/}
+                    {/*/>*/}
 
-                    <label htmlFor="leftsidebarThemecolored">Colored</label>
+                    {/*<label htmlFor="leftsidebarThemecolored">Colored</label>*/}
                   </div>
                   <hr className="mt-1" />
                 </React.Fragment>
               ) : null}
 
-              <FormGroup>
-                <span className="mb-2 d-block" id="radio-title">
-                  Preloader
-                </span>
+              {/*<FormGroup>*/}
+              {/*  <span className="mb-2 d-block" id="radio-title">*/}
+              {/*    Preloader*/}
+              {/*  </span>*/}
 
-                <div className="form-check form-switch">
-                  <input
-                    type="checkbox"
-                    className="form-check-input checkbox"
-                    id="checkbox_1"
-                    checked={props.isPreloader}
-                    onChange={() => {
-                      props.changePreloader(!props.isPreloader)
-                    }}
-                  />
+              {/*  <div className="form-check form-switch">*/}
+              {/*    <input*/}
+              {/*      type="checkbox"*/}
+              {/*      className="form-check-input checkbox"*/}
+              {/*      id="checkbox_1"*/}
+              {/*      checked={props.isPreloader}*/}
+              {/*      onChange={() => {*/}
+              {/*        props.changePreloader(!props.isPreloader)*/}
+              {/*      }}*/}
+              {/*    />*/}
 
-                  <label className="form-check-label" htmlFor="checkbox_1">
-                    Preloader
-                  </label>
-                </div>
-              </FormGroup>
+              {/*    <label className="form-check-label" htmlFor="checkbox_1">*/}
+              {/*      Preloader*/}
+              {/*    </label>*/}
+              {/*  </div>*/}
+              {/*</FormGroup>*/}
 
-              <h6 className="text-center">Choose Layouts</h6>
+              {/*<h6 className="text-center">Choose Layouts</h6>*/}
+              
+              {/*<div className="mb-2">*/}
+              {/*  <Link*/}
+              {/*    to="#"*/}
+              {/*    target="_blank"*/}
+              {/*  >*/}
+              {/*    <img*/}
+              {/*      src={layout1}*/}
+              {/*      className="img-fluid img-thumbnail"*/}
+              {/*      alt=""*/}
+              {/*    />*/}
+              {/*  </Link>*/}
+              {/*</div>*/}
+              
+              {/*<div className="mb-2">*/}
+              {/*  <Link to="#" target="_blank">*/}
+              {/*    <img*/}
+              {/*      src={layout2}*/}
+              {/*      className="img-fluid img-thumbnail"*/}
+              {/*      alt=""*/}
+              {/*    />*/}
+              {/*  </Link>*/}
+              {/*</div>*/}
+              
+              {/*<div className="mb-2">*/}
+              {/*  <Link to="#" target="_blank">*/}
+              {/*    <img*/}
+              {/*      src={layout3}*/}
+              {/*      className="img-fluid img-thumbnail"*/}
+              {/*      alt=""*/}
+              {/*    />*/}
+              {/*  </Link>*/}
+              {/*</div>*/}
 
-              <div className="mb-2">
-                <Link
-                  to="#"
-                  target="_blank"
-                >
-                  <img
-                    src={layout1}
-                    className="img-fluid img-thumbnail"
-                    alt=""
-                  />
-                </Link>
-              </div>
-
-              <div className="mb-2">
-                <Link to="#" target="_blank">
-                  <img
-                    src={layout2}
-                    className="img-fluid img-thumbnail"
-                    alt=""
-                  />
-                </Link>
-              </div>
-
-              <div className="mb-2">
-                <Link to="#" target="_blank">
-                  <img
-                    src={layout3}
-                    className="img-fluid img-thumbnail"
-                    alt=""
-                  />
-                </Link>
-              </div>
-
-              <Link
-                to="#"
-                className="btn btn-primary btn-block mt-3"
-                target="_blank"
-              >
-                <i className="mdi mdi-cart ms-1" /> Purchase Now
-              </Link>
+              {/*<Link*/}
+              {/*  to="#"*/}
+              {/*  className="btn btn-primary btn-block mt-3"*/}
+              {/*  target="_blank"*/}
+              {/*>*/}
+              {/*  <i className="mdi mdi-cart ms-1" /> Purchase Now*/}
+              {/*</Link>*/}
             </div>
           </div>
         </SimpleBar>
