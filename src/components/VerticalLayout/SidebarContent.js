@@ -145,7 +145,7 @@ const SidebarContent = props => {
             <li>
               <Link to="/dashboard" className="waves-effect">
                 <i className="mdi mdi-view-dashboard"></i>
-                <span className="badge rounded-pill bg-primary float-end">2</span>
+                {/*<span className="badge rounded-pill bg-primary float-end">2</span>*/}
                 <span>{props.t("Dashboard")}</span>
               </Link>
             </li>
@@ -178,7 +178,7 @@ const SidebarContent = props => {
             <li>
               <Link to="#" className=" waves-effect">
                 <i className="mdi mdi-chat-processing-outline"></i>
-                <span className="badge rounded-pill bg-danger float-end">Hot</span>
+                {/*<span className="badge rounded-pill bg-danger float-end">Hot</span>*/}
                 <span>Chat</span>
               </Link>
             </li>
@@ -186,7 +186,7 @@ const SidebarContent = props => {
             <li>
               <Link to="#" className=" waves-effect">
                 <i className="mdi mdi-billboard"></i>
-                <span className="badge rounded-pill bg-success float-end">New</span>
+                {/*<span className="badge rounded-pill bg-success float-end">New</span>*/}
                 <span>Kanban Board</span>
               </Link>
             </li>

@@ -25,8 +25,10 @@ const Dashboard = (props) => {
 
   return (
     <React.Fragment>
-
-      
+      <div className="center">
+    <h1>Welcome to AIM</h1>
+      <h3>Create a project to get started.</h3>
+      </div>
     </React.Fragment>
   )
 }
