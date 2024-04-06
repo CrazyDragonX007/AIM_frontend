@@ -32,7 +32,7 @@ import { editProfile, resetProfileFlag } from "../../store/actions";
 const UserProfile = () => {
 
   //meta title
-  document.title = "Profile | Skote - React Admin & Dashboard Template";
+  document.title = "Profile | AIM - All in One Manager";
 
   const dispatch = useDispatch();
 
@@ -56,15 +56,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser"));
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        setname(obj.displayName);
-        setemail(obj.email);
-        setidx(obj.uid);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
+    const obj = JSON.parse(localStorage.getItem("user")) || {};
+    console.log(obj);
+      if (process.env.REACT_APP_DEFAULTAUTH === "jwt" && obj){
         setname(obj.username);
         setemail(obj.email);
         setidx(obj.uid);

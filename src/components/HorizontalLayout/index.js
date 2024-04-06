@@ -151,7 +151,7 @@ const Layout = (props) => {
             <div className="page-content">
               <Container fluid>
                 {props.children}
-                <Footer />
+                {/*<Footer />*/}
               </Container>
             </div>
           </div>

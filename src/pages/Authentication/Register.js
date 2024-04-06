@@ -16,7 +16,7 @@ import { createSelector } from "reselect";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Card, CardBody, Col, Container, Form, FormFeedback, Input, Label, Row } from 'reactstrap';
 
-const Register = props => {
+const Register = () => {
   //meta title
   document.title = "Register | Skote - React Admin & Dashboard Template";
 
@@ -29,16 +29,16 @@ const Register = props => {
 
     initialValues: {
       email: '',
-      username: '',
+      name: '',
       password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
-      username: Yup.string().required("Please Enter Your Username"),
+      name: Yup.string().required("Please Enter Your Name"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      dispatch(registerUser(values));
+      dispatch(registerUser(values,navigate));
     }
   });
 
@@ -124,20 +124,20 @@ useEffect(() => {
                                         </div>
 
                                         <div className="mb-3">
-                                            <Label htmlFor="username">Username</Label>
+                                            <Label htmlFor="name">Name</Label>
                                             <Input
-                                              name="username"
+                                              name="name"
                                               type="text"
-                                              placeholder="Enter username"
+                                              placeholder="Enter full name"
                                               onChange={validation.handleChange}
                                               onBlur={validation.handleBlur}
-                                              value={validation.values.username || ""}
+                                              value={validation.values.name || ""}
                                               invalid={
-                                                validation.touched.username && validation.errors.username ? true : false
+                                                validation.touched.name && validation.errors.name ? true : false
                                               }
                                             />
-                                            {validation.touched.username && validation.errors.username ? (
-                                              <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
+                                            {validation.touched.name && validation.errors.name ? (
+                                              <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
                                             ) : null}
                                         </div>
 

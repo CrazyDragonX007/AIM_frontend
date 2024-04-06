@@ -13,10 +13,10 @@ import { useFormik } from "formik";
 import withRouter from 'components/Common/withRouter';
 
 // actions
-import { loginUser, socialLogin } from "../../store/actions";
+import { loginUser } from "../../store/actions";
 
 const Login = props => {
-  document.title = "Login | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title = "Login | AIM - All in one Manager";
 
   const dispatch = useDispatch();
 
@@ -25,8 +25,8 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || '',
-      password: "123456" || '',
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
@@ -50,14 +50,14 @@ const Login = props => {
       error
   } = useSelector(LoginProperties);
 
-    const signIn = type => {
-        dispatch(socialLogin(type, props.router.navigate));
-    };
+    // const signIn = type => {
+    //     dispatch(socialLogin(type, props.router.navigate));
+    // };
 
   //for facebook and google authentication
-  const socialResponse = type => {
-    signIn(type);
-  };
+  // const socialResponse = type => {
+  //   signIn(type);
+  // };
 
 
   return (
@@ -78,7 +78,7 @@ const Login = props => {
 
                                 <div className="p-3">
                                     <h4 className="text-muted font-size-18 mb-1 text-center">Welcome Back !</h4>
-                                    <p className="text-muted text-center">Sign in to continue to Lexa.</p>
+                                    <p className="text-muted text-center">Sign in to continue to AIM.</p>
                                     <Form
                                       className="form-horizontal mt-4"
                                       onSubmit={(e) => {
@@ -144,19 +144,19 @@ const Login = props => {
                                 </div>
                             </CardBody>
                         </Card>
-                        <Link
-                              to="#"
-                              className="social-list-item bg-danger text-white border-danger"
-                              onClick={e => {
-                                e.preventDefault();
-                                socialResponse("google");
-                              }}
-                            >
-                              <i className="mdi mdi-google" />
-                            </Link>
+                        {/*<Link*/}
+                        {/*      to="#"*/}
+                        {/*      className="social-list-item bg-danger text-white border-danger"*/}
+                        {/*      onClick={e => {*/}
+                        {/*        e.preventDefault();*/}
+                        {/*        socialResponse("google");*/}
+                        {/*      }}*/}
+                        {/*    >*/}
+                              {/*<i className="mdi mdi-google" />*/}
+                        {/*    </Link>*/}
                         <div className="mt-5 text-center">
                             <p>Don't have an account ? <Link to="/register" className="text-primary"> Signup Now </Link></p>
-                            © {new Date().getFullYear()} Lexa <span className="d-none d-sm-inline-block"> - Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand.</span>
+                            {/*© {new Date().getFullYear()} Lexa <span className="d-none d-sm-inline-block"> - Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand.</span>*/}
                         </div>
                     </Col>
                 </Row>

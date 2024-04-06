@@ -158,11 +158,11 @@ const Layout = (props) => {
               <Breadcrumb />
               {props.children}
               {/* render Footer */}
-              <Footer />
+              {/*<Footer />*/}
             </Container>
           </div>
         </div>
-        <Footer />
+        {/*<Footer />*/}
       </div>
       {props.showRightSidebar ? <Rightbar /> : null}
     </React.Fragment>
