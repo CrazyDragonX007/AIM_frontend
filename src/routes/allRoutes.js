@@ -11,12 +11,6 @@ import Logout from "../pages/Authentication/Logout"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
 
-// Inner Authentication
-import Login1 from "../pages/AuthenticationInner/Login"
-import Register1 from "../pages/AuthenticationInner/Register"
-import Recoverpw from "../pages/AuthenticationInner/Recoverpw"
-import LockScreen from "../pages/AuthenticationInner/auth-lock-screen"
-
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
 
@@ -25,6 +19,13 @@ import Dashboard from "../pages/Dashboard/index"
 import PagesBlank from "../pages/Extra Pages/pages-blank";
 import Pages404 from "../pages/Extra Pages/pages-404";
 import Pages500 from "../pages/Extra Pages/pages-500";
+import Board from "../pages/Project/Board"
+
+// Project
+import Details from "../pages/Project/Details";
+import Calendar from "../pages/Calendar"
+import AdminSettings from "../pages/Admin/adminSettings"
+import Invite from "../pages/Admin/invite"
 
 const userRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -33,6 +34,10 @@ const userRoutes = [
   { path: "/profile", component: <UserProfile /> },
 
   { path: "/pages-blank", component: <PagesBlank /> },
+  {path:"/project-details",component:<Details/>},
+  {path:"/project-board",component:<Board/>},
+  {path:"/calendar",component:<Calendar/>},
+  {path:'/admin-settings',component:<AdminSettings/>},
 
   // this route should be at the end of all other routes
   {
@@ -47,15 +52,10 @@ const authRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPwd /> },
   { path: "/register", component: <Register /> },
+  {path:'/invite/*',component:<Invite/>},
 
   { path: "/pages-404", component: <Pages404 /> },
   { path: "/pages-500", component: <Pages500 /> },
-
-  // Authentication Inner
-  { path: "/pages-login", component: <Login1 /> },
-  { path: "/pages-register", component: <Register1 /> },
-  { path: "/page-recoverpw", component: <Recoverpw /> },
-  { path: "/auth-lock-screen", component: <LockScreen /> },
 ]
 
 export { userRoutes, authRoutes }

@@ -11,8 +11,18 @@ import { Link } from "react-router-dom"
 
 //i18n
 import { withTranslation } from "react-i18next"
+import { useDispatch, useSelector } from "react-redux"
+import { getProjects } from "../../store/projects/actions"
 
 const SidebarContent = props => {
+  const dispatch = useDispatch()
+  const projects = useSelector(state => state.Projects?.projects)
+  console.log(projects)
+
+  useEffect(() => {
+    dispatch(getProjects())
+  }, [dispatch])
+
   const ref = useRef();
   const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
@@ -135,6 +145,7 @@ const SidebarContent = props => {
       }
     }
   }
+  const user = JSON.parse(localStorage.getItem("user"))
 
   return (
     <React.Fragment>
@@ -145,51 +156,69 @@ const SidebarContent = props => {
             <li>
               <Link to="/dashboard" className="waves-effect">
                 <i className="mdi mdi-view-dashboard"></i>
-                {/*<span className="badge rounded-pill bg-primary float-end">2</span>*/}
                 <span>{props.t("Dashboard")}</span>
               </Link>
             </li>
-
-            <li>
-              <Link to="#" className=" waves-effect">
-                <i className="mdi mdi-calendar-check"></i>
-                <span>{props.t("Calendar")}</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/#" className="has-arrow waves-effect">
-                <i className="mdi mdi-email-outline"></i>
-                <span>{props.t("Email")}</span>
-              </Link>
-              <ul className="sub-menu" >
-                <li>
-                  <Link to="#">{props.t("Inbox")}</Link>
+            {projects?.map((project,index) => {
+              return (
+                <li key={index}>
+                  <Link to="/project-details" state={{project:project}} className="waves-effect">
+                    <i className="mdi mdi-view-dashboard"></i>
+                    <span>{props.t(project.title)}</span>
+                  </Link>
                 </li>
+              )
+            })}
+            {user && user.role === 'Admin' && (
                 <li>
-                  <Link to="#">{props.t("Email Read")} </Link>
+            <Link to='/admin-settings' className='waves-effect position-fixed bottom-0 mb-lg-3'>
+              <i className="mdi mdi-view-dashboard "></i>
+              <span>Admin Settings</span>
+            </Link>
                 </li>
-                <li>
-                  <Link to="#">{props.t("Email Compose")} </Link>
-                </li>
-              </ul>
-            </li>
+            )}
+          </ul>
 
-            <li>
-              <Link to="#" className=" waves-effect">
-                <i className="mdi mdi-chat-processing-outline"></i>
-                {/*<span className="badge rounded-pill bg-danger float-end">Hot</span>*/}
-                <span>Chat</span>
-              </Link>
-            </li>
+            {/*<li>*/}
+            {/*  <Link to="/calendar" className=" waves-effect">*/}
+            {/*    <i className="mdi mdi-calendar-check"></i>*/}
+            {/*    <span>{props.t("Calendar")}</span>*/}
+            {/*  </Link>*/}
+            {/*</li>*/}
 
-            <li>
-              <Link to="#" className=" waves-effect">
-                <i className="mdi mdi-billboard"></i>
-                {/*<span className="badge rounded-pill bg-success float-end">New</span>*/}
-                <span>Kanban Board</span>
-              </Link>
-            </li>
+            {/*<li>*/}
+            {/*  <Link to="/#" className="has-arrow waves-effect">*/}
+            {/*    <i className="mdi mdi-email-outline"></i>*/}
+            {/*    <span>{props.t("Email")}</span>*/}
+            {/*  </Link>*/}
+            {/*  <ul className="sub-menu" >*/}
+            {/*    <li>*/}
+            {/*      <Link to="#">{props.t("Inbox")}</Link>*/}
+            {/*    </li>*/}
+            {/*    <li>*/}
+            {/*      <Link to="#">{props.t("Email Read")} </Link>*/}
+            {/*    </li>*/}
+            {/*    <li>*/}
+            {/*      <Link to="#">{props.t("Email Compose")} </Link>*/}
+            {/*    </li>*/}
+            {/*  </ul>*/}
+            {/*</li>*/}
+
+            {/*<li>*/}
+            {/*  <Link to="#" className=" waves-effect">*/}
+            {/*    <i className="mdi mdi-chat-processing-outline"></i>*/}
+            {/*    /!*<span className="badge rounded-pill bg-danger float-end">Hot</span>*!/*/}
+            {/*    <span>Chat</span>*/}
+            {/*  </Link>*/}
+            {/*</li>*/}
+
+            {/*<li>*/}
+            {/*  <Link to="#" className=" waves-effect">*/}
+            {/*    <i className="mdi mdi-billboard"></i>*/}
+            {/*    /!*<span className="badge rounded-pill bg-success float-end">New</span>*!/*/}
+            {/*    <span>Kanban Board</span>*/}
+            {/*  </Link>*/}
+            {/*</li>*/}
 
             {/*<li className="menu-title">{props.t("Components")}</li>*/}
             {/*<li>*/}
@@ -472,7 +501,6 @@ const SidebarContent = props => {
             {/*    </li>*/}
             {/*  </ul>*/}
             {/*</li>*/}
-          </ul>
         </div>
       </SimpleBar>
     </React.Fragment>

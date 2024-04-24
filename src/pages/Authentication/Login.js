@@ -37,7 +37,6 @@ const Login = props => {
     }
   });
 
-
   const selectLoginState = (state) => state.Login;
     const LoginProperties = createSelector(
       selectLoginState,
@@ -49,16 +48,6 @@ const Login = props => {
     const {
       error
   } = useSelector(LoginProperties);
-
-    // const signIn = type => {
-    //     dispatch(socialLogin(type, props.router.navigate));
-    // };
-
-  //for facebook and google authentication
-  // const socialResponse = type => {
-  //   signIn(type);
-  // };
-
 
   return (
     <React.Fragment>
@@ -77,7 +66,7 @@ const Login = props => {
                                 </h3>
 
                                 <div className="p-3">
-                                    <h4 className="text-muted font-size-18 mb-1 text-center">Welcome Back !</h4>
+                                    <h4 className="text-muted font-size-18 mb-1 text-center">Welcome Back!</h4>
                                     <p className="text-muted text-center">Sign in to continue to AIM.</p>
                                     <Form
                                       className="form-horizontal mt-4"

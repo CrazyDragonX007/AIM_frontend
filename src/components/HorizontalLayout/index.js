@@ -16,7 +16,6 @@ import {
 import Header from "./Header"
 import Breadcrumb from "../../components/Common/Breadcrumb";
 import Navbar from "./Navbar";
-import Footer from "./Footer";
 import Rightbar from "../CommonForBoth/Rightbar"
 
 import { useSelector, useDispatch } from "react-redux";

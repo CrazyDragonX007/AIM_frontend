@@ -31,6 +31,7 @@ const Register = () => {
       email: '',
       name: '',
       password: '',
+      role:'Admin'
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),

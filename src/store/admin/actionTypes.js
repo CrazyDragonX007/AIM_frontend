@@ -1,0 +1,16 @@
+export const INVITE_USER = "INVITE_USER";
+export const INVITE_USER_SUCCESS = "INVITE_USER_SUCCESS";
+export const INVITE_USER_FAIL = "INVITE_USER_FAIL";
+
+export const INVITE_REGISTER_USER = "invite_register_user"
+export const INVITE_REGISTER_USER_SUCCESS = "invite_register_user_success"
+export const INVITE_REGISTER_USER_FAIL = "invite_register_user_fail"
+export const GET_ALL_USERS = "GET_ALL_USERS"
+export const GET_ALL_USERS_SUCCESS = "GET_ALL_USERS_SUCCESS"
+export const GET_ALL_USERS_FAIL = "GET_ALL_USERS_FAIL"
+export const CHANGE_USER_ROLE = "CHANGE_USER_ROLE"
+export const CHANGE_USER_ROLE_SUCCESS = "CHANGE_USER_ROLE_SUCCESS"
+export const CHANGE_USER_ROLE_FAIL = "CHANGE_USER_ROLE_FAIL"
+export const REMOVE_USER = "REMOVE_USER"
+export const REMOVE_USER_SUCCESS = "REMOVE_USER_SUCCESS"
+export const REMOVE_USER_FAIL = "REMOVE_USER_FAIL"

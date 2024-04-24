@@ -14,7 +14,7 @@ function* loginUser({ payload: { user, history } }) {
       });
       localStorage.setItem("authUser", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      yield put(loginSuccess(response));
+      yield put(loginSuccess(response.data.user));
     }
     history('/dashboard');
   } catch (error) {
@@ -31,27 +31,6 @@ function* logoutUser({ payload: { history } }) {
     yield put(apiError(error));
   }
 }
-
-// function* socialLogin({ payload: { type, history } }) {
-//   try {
-//     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-//       const fireBaseBackend = getFirebaseBackend();
-//       const response = yield call(fireBaseBackend.socialLoginUser, type);
-//       if (response) {
-//         history("/dashboard");
-//       } else {
-//         history("/login");
-//       }
-//       localStorage.setItem("authUser", JSON.stringify(response));
-//       yield put(loginSuccess(response));
-//     }
-//     const response = yield call(fireBaseBackend.socialLoginUser, type);
-//     if(response)
-//     history("/dashboard");
-//   } catch (error) {
-//     yield put(apiError(error));
-//   }
-// }
 
 function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser);

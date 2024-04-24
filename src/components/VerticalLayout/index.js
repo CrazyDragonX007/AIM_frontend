@@ -21,7 +21,6 @@ import { createSelector } from 'reselect';
 // Layout Related Components
 import Header from "./Header"
 import Sidebar from "./Sidebar"
-import Footer from "./Footer"
 import Rightbar from "../CommonForBoth/Rightbar"
 //Import Breadcrumb
 import Breadcrumb from "../../components/Common/Breadcrumb"
