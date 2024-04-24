@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { userForgetPassword } from "../../store/actions";
 
 const ForgetPasswordPage = props => {
-  document.title = "Forget Password | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title = "Forget Password | AIM - All in One Manager";
 
   const dispatch = useDispatch();
 

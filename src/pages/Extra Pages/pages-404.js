@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 
 const Pages404 = () => {
-    document.title = "Error 404 | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+    document.title = "Error 404 | AIM - All in One Manager";
 
   return (
     <React.Fragment>
