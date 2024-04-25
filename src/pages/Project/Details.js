@@ -1,33 +1,72 @@
 import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Row } from "reactstrap"
+import { useNavigate } from "react-router-dom"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardText,
+  CardTitle,
+  Col,
+  Form,
+  FormFeedback,
+  Input,
+  Label, Modal,
+  Row
+} from "reactstrap"
 import { getAllUsers } from "../../store/admin/actions"
 import { useDispatch, useSelector } from "react-redux"
-import { editEmployees, editManagers } from "../../store/projects/actions"
+import { editEmployees, editManagers, updateProject } from "../../store/projects/actions"
+import { useFormik } from "formik"
+import * as Yup from "yup"
 
 const Details = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
-  const project = location.state?.project
-  console.log(project)
+  const project = useSelector(state => state.Projects?.currentProject)
 
   useEffect(() => {
-    dispatch(getAllUsers(project.teamId))
+    dispatch(getAllUsers(project?.teamId))
   }, [dispatch,project])
 
+  const currentUser = useSelector(state => state.Login?.user)
+
   const users = useSelector(state => state.Admin?.users)
-  const [projectManagers,setProjectManagers] = useState(project.assignedManagers)
-  const [projectEmployees,setProjectEmployees] = useState(project.assignedEmployees)
+  const [projectManagers,setProjectManagers] = useState(project?.assignedManagers)
+  const [projectEmployees,setProjectEmployees] = useState(project?.assignedEmployees)
   const managersInTeam = users.filter(user => user.role === "Manager")
   const employeesInTeam = users.filter(user => user.role === "Employee")
-  const currentUserRole = JSON.parse(localStorage.getItem('user')).role
-  console.log(users)
-  console.log(projectManagers,projectEmployees)
-  console.log(managersInTeam,employeesInTeam)
+  const currentUserRole = currentUser.role
+  const [editProjectModalFlag, setEditProjectModalFlag] = useState(false)
+
+  useEffect(() => {
+    setProjectManagers(project?.assignedManagers)
+    setProjectEmployees(project?.assignedEmployees)
+  },[project])
+
+  const validation = useFormik({
+    // enableReinitialize : use this  flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      title: project?.title,
+      description: project?.description,
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required("Please Enter Project Title"),
+    }),
+    onSubmit: (values) => {
+      dispatch(updateProject({...values,id:project._id}))
+      setEditProjectModalFlag(false);
+    }
+  });
 
   const showBoard = () => {
     navigate("/project-board", { state: { projectId:project._id } })
+  }
+
+  const showEditProject = () => {
+    setEditProjectModalFlag(!editProjectModalFlag)
   }
 
   const removeManagerFromProject = (manager) => {
@@ -54,6 +93,85 @@ const Details = () => {
   const submitEmployeeChanges = () => {
     dispatch(editEmployees(project._id,projectEmployees))
   }
+
+  const editProjectModal = (
+    <Modal
+      size="lg"
+      isOpen={editProjectModalFlag}
+      toggle={() => {
+        showEditProject()
+      }}
+    >
+      <div className="modal-header">
+        <h5
+          className="modal-title mt-0"
+          id="myLargeModalLabel"
+        >
+          Edit Project
+        </h5>
+        <button
+          onClick={() => {
+            setEditProjectModalFlag(false)
+          }}
+          type="button"
+          className="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div className="modal-body">
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          validation.handleSubmit();
+          return false;
+        }}>
+          <div className="form-group">
+            <Label htmlFor="title">Project Title</Label>
+            <Input
+              id="title"
+              name="title"
+              className="form-control"
+              placeholder="Enter project title"
+              type="text"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.title || ""}
+              invalid={
+                !!(validation.touched.title && validation.errors.title)
+              }
+            />
+            {validation.touched.title && validation.errors.title ? (
+              <FormFeedback type="invalid">{validation.errors.title}</FormFeedback>
+            ) : null}
+          </div>
+          <div className="form-group mt-4">
+            <Label htmlFor="description">Project Description</Label>
+            <Input
+              id="description"
+              name="description"
+              className="form-control"
+              placeholder="Enter project description"
+              type="textarea"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.description || ""}
+              invalid={
+                !!(validation.touched.description && validation.errors.description)
+              }
+            />
+            {validation.touched.description && validation.errors.description ? (
+              <FormFeedback type="invalid">{validation.errors.description}</FormFeedback>
+            ) : null}
+          </div>
+          <div className="mt-4">
+            <button type="submit" className="btn btn-primary w-md">Submit</button>
+          </div>
+        </Form>
+      </div>
+    </Modal>
+  )
 
   const managerSection = (
     <React.Fragment >
@@ -177,26 +295,35 @@ const Details = () => {
     <React.Fragment>
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
         <Button className="align-content-right" onClick={showBoard}>View Board</Button>
+        <Button className="align-content-right" style={{ marginLeft: 10 }} onClick={() => navigate("/calendar", { state: { projectId: project._id } })}>Shifts Calendar</Button>
       </div>
       <Row>
         <Col>
           <Card>
-            <CardHeader className="card-header h4 font-16 mt-0">{project.title}</CardHeader>
+            <div style={{display:"flex",justifyContent: "flex-end", marginBottom: 10 }}>
+            <CardHeader className="card-header h4 font-16 mt-0" style={{flex:1}}>{project?.title}</CardHeader>
+            {currentUserRole === "Admin" && <div>
+              <Button className="align-content-right" onClick={showEditProject}>Edit project details</Button>
+              {editProjectModal}
+            </div>}
+            </div>
             <CardBody>
-              <CardTitle className="h4">Created by: {project.createdBy}</CardTitle>
+              <CardTitle className="h4 mb-4">Created by: {project?.createdBy}</CardTitle>
               <CardTitle className="h4">Description: </CardTitle>
-              <CardText>{project.description || "No description available"}</CardText>
-              <br/>
+              <CardText>{project?.description || "No description available"}</CardText>
+              <br />
               {currentUserRole === "Admin" && managerSection}
-              <br/>
-              {(currentUserRole === "Admin") && <Button onClick={submitManagerChanges} className="btn btn-primary">Submit Manager Changes</Button>}
-              <br/><br/>
+              <br />
+              {(currentUserRole === "Admin") &&
+                <Button onClick={submitManagerChanges} className="btn btn-primary">Submit Manager Changes</Button>}
+              <br /><br />
               {(currentUserRole === "Admin" || currentUserRole === "Manager") && employeeSection}
-              <br/>
-              {(currentUserRole === "Admin" || currentUserRole === "Manager") && <Button onClick={submitEmployeeChanges} className="btn btn-primary">Submit Employee Changes</Button>}
-              <br/><br/>
+              <br />
+              {(currentUserRole === "Admin" || currentUserRole === "Manager") &&
+                <Button onClick={submitEmployeeChanges} className="btn btn-primary">Submit Employee Changes</Button>}
+              <br /><br />
               <CardText>
-                <small className="text-muted">Created on: {new Date(project.createdOn).toDateString()}</small>
+                <small className="text-muted">Created on: {new Date(project?.createdOn).toDateString()}</small>
               </CardText>
             </CardBody>
           </Card>

@@ -1,31 +1,40 @@
-import { takeEvery, fork, put, all, call } from "redux-saga/effects"
+import { takeEvery, fork, put, all } from "redux-saga/effects"
 
-import { EDIT_PROFILE } from "./actionTypes"
-import { profileSuccess, profileError } from "./actions"
+import { EDIT_PROFILE, CHANGE_PASSWORD } from "./actionTypes"
+import { changePasswordError, changePasswordSuccess, editProfileError } from "./actions"
+import axios from "axios"
 
-function* editProfile({ payload: { user } }) {
-  function postJwtProfile() {
-
-  }
-
+function* editProfile({ payload:  user  }) {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      const response = yield call(postJwtProfile, "/post-jwt-profile", {
-        username: user.username,
-        idx: user.idx,
-      })
-      yield put(profileSuccess(response))
-    }
-  } catch (error) {
-    yield put(profileError(error))
+    const url = process.env.REACT_APP_BACKEND_URL + "/users/edit";
+    const response = yield axios.put(url, user)
+    console.log(response)
+  }catch (error) {
+    yield put(editProfileError(error))
   }
 }
+
+function* updatePassword({ payload:  data  }) {
+  try {
+    const url = process.env.REACT_APP_BACKEND_URL + "/users/change_password";
+    const response = yield axios.put(url, data)
+    yield put(changePasswordSuccess(response.data.message))
+  }catch (error) {
+    console.log(error)
+    yield put(changePasswordError(error.response.data.message))
+  }
+}
+
 export function* watchProfile() {
   yield takeEvery(EDIT_PROFILE, editProfile)
 }
 
+export function* watchChangePassword() {
+  yield takeEvery(CHANGE_PASSWORD, updatePassword)
+}
+
 function* ProfileSaga() {
-  yield all([fork(watchProfile)])
+  yield all([fork(watchProfile), fork(watchChangePassword)])
 }
 
 export default ProfileSaga

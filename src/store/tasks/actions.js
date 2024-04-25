@@ -19,7 +19,12 @@ import {
   ADD_SECTION_SUCCESS,
   DELETE_SECTION,
   DELETE_SECTION_SUCCESS,
-  DELETE_SECTION_FAIL, UPDATE_SECTION_FAIL, UPDATE_SECTION_SUCCESS, UPDATE_SECTION
+  DELETE_SECTION_FAIL,
+  UPDATE_SECTION_FAIL,
+  UPDATE_SECTION_SUCCESS,
+  UPDATE_SECTION,
+  ASSIGN_TASK_FAIL,
+  ASSIGN_TASK_SUCCESS, ASSIGN_TASK
 } from "./actionTypes"
 
 
@@ -40,20 +45,20 @@ export const getTasksFail = error => ({
   payload: error,
 })
 
-export const deleteTask = kanban => ({
+export const deleteTask = taskId => ({
   type: DELETE_TASK,
-  payload: kanban,
+  payload: taskId,
 })
 
-export const deleteTaskSuccess = kanban => ({
+export const deleteTaskSuccess = task => ({
   type: DELETE_TASK_SUCCESS,
-  payload: kanban,
+  payload: task,
 
 })
 
-export const deleteTaskFail = kanban => ({
+export const deleteTaskFail = task => ({
   type: DELETE_TASK_FAIL,
-  payload: kanban,
+  payload: task,
 })
 
 export const addTask = data => ({
@@ -61,9 +66,9 @@ export const addTask = data => ({
   payload: data,
 })
 
-export const addTaskSuccess = cardData => ({
+export const addTaskSuccess = task => ({
   type: ADD_TASK_SUCCESS,
-  payload: cardData,
+  payload: task,
 })
 
 export const addTaskFail = error => ({
@@ -71,14 +76,14 @@ export const addTaskFail = error => ({
   payload: error,
 })
 
-export const updateTask = card => ({
+export const updateTask = task => ({
   type: UPDATE_TASK,
-  payload: card,
+  payload: task,
 })
 
-export const updateTaskSuccess = card => ({
+export const updateTaskSuccess = task => ({
   type: UPDATE_TASK_SUCCESS,
-  payload: card,
+  payload: task,
 })
 
 export const updateTaskFail = error => ({
@@ -143,6 +148,21 @@ export const updateSectionSuccess = data => ({
 
 export const updateSectionFail = error => ({
   type: UPDATE_SECTION_FAIL,
+  payload: error,
+})
+
+export const assignTask = data => ({
+  type: ASSIGN_TASK,
+  payload: data,
+})
+
+export const assignTaskSuccess = data => ({
+  type: ASSIGN_TASK_SUCCESS,
+  payload: data,
+})
+
+export const assignTaskFail = error => ({
+  type: ASSIGN_TASK_FAIL,
   payload: error,
 })
 

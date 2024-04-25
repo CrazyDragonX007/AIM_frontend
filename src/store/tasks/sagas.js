@@ -2,7 +2,15 @@ import { call, put, takeEvery } from "redux-saga/effects"
 
 // Crypto Redux States
 import {
-  GET_TASKS, DELETE_TASK, ADD_TASK, UPDATE_TASK, CHANGE_SECTION, ADD_SECTION, UPDATE_SECTION, DELETE_SECTION
+  GET_TASKS,
+  DELETE_TASK,
+  ADD_TASK,
+  UPDATE_TASK,
+  CHANGE_SECTION,
+  ADD_SECTION,
+  UPDATE_SECTION,
+  DELETE_SECTION,
+  ASSIGN_TASK
 } from "./actionTypes"
 import {
   getTasksSuccess,
@@ -12,8 +20,16 @@ import {
   addTaskSuccess,
   addTaskFail,
   updateTaskSuccess,
-  updateTaskFail, changeSectionSuccess, changeSectionFail,
-  addSectionSuccess, addSectionFail, updateSectionFail, updateSectionSuccess, deleteSectionFail, deleteSectionSuccess
+  updateTaskFail,
+  changeSectionSuccess,
+  changeSectionFail,
+  addSectionSuccess,
+  addSectionFail,
+  updateSectionFail,
+  updateSectionSuccess,
+  deleteSectionFail,
+  deleteSectionSuccess,
+  assignTaskSuccess, assignTaskFail
 } from "./actions"
 
 import { toast } from "react-toastify"
@@ -27,7 +43,7 @@ const getProjectTasks =  (projectId) => {
 
 const deleteTask = (taskid) => {
   const url = process.env.REACT_APP_BACKEND_URL + `/tasks/delete`;
-  return axios.delete(url,{headers: {Authorization: token}})
+  return axios.delete(url,{params:{id:taskid},headers: {Authorization: token}})
 }
 
 const addTask = (task) => {
@@ -53,7 +69,7 @@ function* fetchTasks({payload:projectId}) {
 function* onDeleteTask({ payload: taskId }) {
   try {
     const response = yield call(deleteTask,taskId)
-    yield put(deleteTaskSuccess(response))
+    yield put(deleteTaskSuccess(response.data.task))
     toast.success("Task Deleted Successfully", { autoClose: 2000 });
   } catch (error) {
     yield put(deleteTaskFail(error))
@@ -75,7 +91,7 @@ function* onAddTask({ payload: task }) {
 function* onUpdateTask({ payload: task }) {
   try {
     const response = yield call(updateTask, task)
-    yield put(updateTaskSuccess(response))
+    yield put(updateTaskSuccess(response.data))
     toast.success("Task Updated Successfully", { autoClose: 2000 });
   } catch (error) {
     yield put(updateTaskFail(error))
@@ -91,7 +107,7 @@ function* changeTaskSection({ payload: data }) {
         Authorization: token
       }
     })
-    yield put(changeSectionSuccess(response.data))
+    yield put(changeSectionSuccess(response.data.change))
     // toast.success("Task Updated Successfully", { autoClose: 2000 });
   } catch (error) {
     yield put(changeSectionFail(error))
@@ -130,7 +146,7 @@ function* editSection({ payload: data }) {
 function* deleteSection({ payload: data }) {
   try {
     const url = process.env.REACT_APP_BACKEND_URL + "/sections/delete";
-    const response = yield axios.post(url, data,{
+    const response = yield axios.post(url, {id:data},{
       headers: {
         Authorization: token
       }
@@ -138,6 +154,20 @@ function* deleteSection({ payload: data }) {
     yield put(deleteSectionSuccess(response.data))
   } catch (error) {
     yield put(deleteSectionFail(error))
+  }
+}
+
+function* assignTask({payload: data}) {
+  try {
+    const url = process.env.REACT_APP_BACKEND_URL + "/tasks/assign";
+    const response = yield axios.post(url, data,{
+      headers: {
+        Authorization: token
+      }
+    })
+    yield put(assignTaskSuccess(response.data.task))
+  } catch (error) {
+    yield put(assignTaskFail(error))
   }
 }
 
@@ -150,6 +180,7 @@ function* tasksSaga() {
   yield takeEvery(ADD_SECTION, createSection)
   yield takeEvery(UPDATE_SECTION, editSection)
   yield takeEvery(DELETE_SECTION, deleteSection)
+  yield takeEvery(ASSIGN_TASK, assignTask)
 }
 
 export default tasksSaga

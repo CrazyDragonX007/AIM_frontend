@@ -19,7 +19,13 @@ import {
   ADD_SECTION_FAIL,
   UPDATE_SECTION,
   UPDATE_SECTION_SUCCESS,
-  UPDATE_SECTION_FAIL, DELETE_SECTION, DELETE_SECTION_FAIL, DELETE_SECTION_SUCCESS
+  UPDATE_SECTION_FAIL,
+  DELETE_SECTION,
+  DELETE_SECTION_FAIL,
+  DELETE_SECTION_SUCCESS,
+  ASSIGN_TASK,
+  ASSIGN_TASK_SUCCESS,
+  ASSIGN_TASK_FAIL
 } from "./actionTypes"
 
 const INIT_STATE = {
@@ -92,11 +98,7 @@ const Tasks = (state = INIT_STATE, action) => {
           if (s._id === action.payload.currentSection) {
             return {
               ...s,
-              tasks: s.tasks.map(t =>
-                t._id.toString() === action.payload._id.toString()
-                  ? { t, ...action.payload }
-                  : t
-              ),
+              tasks: s.tasks.map(t => t._id.toString() === action.payload._id.toString() ? action.payload : t),
             }
           }
           return s
@@ -108,30 +110,30 @@ const Tasks = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       }
-//TODO: Check delete case
-    case DELETE_TASK:
-      return {
-        ...state,
-        sections: state.sections.map(s => {
-          const updatedTasks = s.tasks.filter(
-            tasks => tasks._id !== action.payload
-          )
-          return { ...s, tasks: updatedTasks }
-        }),
-      }
 
     case DELETE_TASK_SUCCESS:
       return {
         ...state,
-        sections: state.sections.filter(
-          s => s._id.toString() !== action.payload.toString()
-        ),
+        sections: state.sections.map(s => {
+          const updatedTasks = s.tasks.filter(
+            task => task._id !== action.payload._id
+          )
+          return { ...s, tasks: updatedTasks }
+        }),
+        loading: false,
+      }
+
+    case DELETE_TASK:
+      return {
+        ...state,
+        loading: true,
       }
 
     case DELETE_TASK_FAIL:
       return {
         ...state,
         error: action.payload,
+        loading: false,
       }
 
       case CHANGE_SECTION:
@@ -143,6 +145,23 @@ const Tasks = (state = INIT_STATE, action) => {
       case CHANGE_SECTION_SUCCESS:
         return {
           ...state,
+          sections: state.sections.map(s => {
+            if(s._id===action.payload.oldSection){
+              return {
+                ...s,
+                tasks: s.tasks.filter(
+                  t => t._id.toString() !== action.payload.task._id.toString()
+                ),
+              }
+            }
+            if(s._id===action.payload.newSection){
+              return {
+                ...s,
+                tasks: [...s.tasks, action.payload.task],
+              }
+            }
+            return s
+          }),
           loading: false,
         }
 
@@ -180,6 +199,13 @@ const Tasks = (state = INIT_STATE, action) => {
       case UPDATE_SECTION_SUCCESS:
         return {
           ...state,
+          sections: state.sections.map(s => {
+            if(s._id === action.payload._id){
+              s.title = action.payload.newTitle
+              return s
+            }
+            return s
+          }),
           loading: false,
         }
 
@@ -209,7 +235,30 @@ const Tasks = (state = INIT_STATE, action) => {
                   ...state,
                   error: action.payload,
                 }
-
+    case ASSIGN_TASK:
+      return {
+        ...state,
+        loading : true
+      }
+    case ASSIGN_TASK_SUCCESS:
+      return {
+        ...state,
+        sections: state.sections.map(s => {
+          if (s._id === action.payload.currentSection) {
+            return {
+              ...s,
+              tasks: s.tasks.map(t => t._id.toString() === action.payload._id.toString() ? action.payload : t),
+            }
+          }
+          return s
+        }),
+        loading: false,
+      }
+    case ASSIGN_TASK_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      }
 
     default:
       return state

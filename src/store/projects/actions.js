@@ -16,8 +16,8 @@ import {
   EDIT_EMPLOYEES_FAIL,
   EDIT_MANAGERS,
   EDIT_MANAGERS_SUCCESS,
-  EDIT_MANAGERS_FAIL,
-} from "./actionTypes";
+  EDIT_MANAGERS_FAIL, SET_CURRENT_PROJECT
+} from "./actionTypes"
 
 export const getProjects = (teamId) => {
   return {
@@ -142,6 +142,13 @@ export const editManagersFail = (error) => {
   return {
     type: EDIT_MANAGERS_FAIL,
     payload: error,
+  };
+}
+
+export const setCurrentProject = (project) => {
+  return {
+    type: SET_CURRENT_PROJECT,
+    payload: project,
   };
 }
 

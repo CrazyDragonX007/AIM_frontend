@@ -32,15 +32,15 @@ function* getProjects({payload:teamId}) {
   }
 }
 
-function* updateProject({payload:{project}}) {
+function* updateProject({payload:project}) {
   try {
     const url = process.env.REACT_APP_BACKEND_URL + "/projects/edit";
-    const response = yield axios.post(url,project, {
+    const response = yield axios.put(url,project, {
       headers: {
         Authorization: token
       }
     });
-    yield put(updateProjectSuccess(response.data))
+    yield put(updateProjectSuccess(response.data.project))
   } catch (error) {
     yield put(updateProjectFail(error))
   }
@@ -60,10 +60,11 @@ function* addProject({ payload:  project  }) {
   }
 }
 
-function* deleteProject({ payload: { id } }) {
+function* deleteProject({ payload:  id }) {
   try {
     const url = process.env.REACT_APP_BACKEND_URL + "/projects/delete"
-    yield axios.post(url, { id }, {
+    yield axios.delete(url, {
+      params: { id },
       headers: {
         Authorization: token
       }

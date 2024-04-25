@@ -12,7 +12,7 @@ import {
   changeLayoutWidth,
   changeColor,
   showRightSidebarAction,
-  changeMode
+  changeMode, loginSuccess
 } from "../../store/actions"
 
 import { useSelector, useDispatch } from "react-redux";
@@ -24,11 +24,21 @@ import Sidebar from "./Sidebar"
 import Rightbar from "../CommonForBoth/Rightbar"
 //Import Breadcrumb
 import Breadcrumb from "../../components/Common/Breadcrumb"
+import { getProjects } from "../../store/projects/actions"
 
 const Layout = (props) => {
 
   const dispatch = useDispatch();
   const selectLayoutState = (state) => state.Layout;
+
+  useEffect(() => {
+    if (localStorage.getItem("authUser")) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      dispatch(getProjects(user.teamId))
+      dispatch(loginSuccess(user))
+    }
+  }, [dispatch])
+
 
   const selectLayoutProperties = createSelector(
     selectLayoutState,

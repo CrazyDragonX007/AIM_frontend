@@ -48,7 +48,6 @@ function* inviteRegisterUser({ payload:  {user, history} }) {
 
 function* getAllUsers({payload:teamId}) {
   try {
-    console.log(teamId)
     const url = process.env.REACT_APP_BACKEND_URL + "/users/all_users";
     const response = yield axios.get(url, {
       params: { teamId },

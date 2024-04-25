@@ -12,16 +12,12 @@ import { Link } from "react-router-dom"
 //i18n
 import { withTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
-import { getProjects } from "../../store/projects/actions"
+import { Button } from "reactstrap"
+import { setCurrentProject } from "../../store/projects/actions"
 
 const SidebarContent = props => {
-  const dispatch = useDispatch()
   const projects = useSelector(state => state.Projects?.projects)
-  console.log(projects)
-
-  useEffect(() => {
-    dispatch(getProjects())
-  }, [dispatch])
+  const dispatch = useDispatch()
 
   const ref = useRef();
   const activateParentDropdown = useCallback((item) => {
@@ -145,7 +141,7 @@ const SidebarContent = props => {
       }
     }
   }
-  const user = JSON.parse(localStorage.getItem("user"))
+  const user = useSelector(state => state.Login?.user)
 
   return (
     <React.Fragment>
@@ -162,9 +158,11 @@ const SidebarContent = props => {
             {projects?.map((project,index) => {
               return (
                 <li key={index}>
-                  <Link to="/project-details" state={{project:project}} className="waves-effect">
+                  <Link to="/project-details" className="waves-effect">
+                    <Button onClick={()=>dispatch(setCurrentProject(project))} className='bg-transparent border-0'>
                     <i className="mdi mdi-view-dashboard"></i>
                     <span>{props.t(project.title)}</span>
+                    </Button>
                   </Link>
                 </li>
               )

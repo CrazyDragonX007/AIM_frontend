@@ -4,7 +4,7 @@ import { connect, useDispatch, useSelector } from "react-redux"
 
 //Import Action to copy breadcrumb items from local state to redux state
 import { setBreadcrumbItems } from "../../store/actions"
-import { addProject, getProjects } from "../../store/projects/actions"
+import { addProject, deleteProject, setCurrentProject } from "../../store/projects/actions"
 import {
   Button,
   Card,
@@ -17,7 +17,8 @@ import {
   Input,
   Label,
   Modal,
-  Row
+  Row,
+  Spinner
 } from "reactstrap"
 import {  useNavigate } from "react-router-dom"
 import { useFormik } from "formik"
@@ -33,27 +34,15 @@ const Dashboard = (props) => {
     { title: "Dashboard", link: "/" }
   ]
 
-  const [user,setUser] = useState({})
-
-  useEffect(() => {
-    if(localStorage.getItem("authUser")) {
-      const user = JSON.parse(localStorage.getItem("user"));
-      setUser(user);
-    }
-  }, [])
+  const user = useSelector(state=>state.Login?.user)
 
   useEffect(() => {
     props.setBreadcrumbItems("Dashboard", breadcrumbItems)
   })
 
-  useEffect(() => {
-    if(user) {
-      dispatch(getProjects(user.teamId))
-    }
-  }, [dispatch,user])
-
   const projects = useSelector(state => state.Projects?.projects)
-  const [createModal,setCreateModal] = useState(false);
+  const [createModal, setCreateModal] = useState(false);
+  const loading = useSelector(state => state.Projects?.loading)
 
   const showProjectModal = () => {
     setCreateModal(!createModal)
@@ -65,9 +54,9 @@ const Dashboard = (props) => {
 
     initialValues: {
       title: '',
-      description:'',
+      description: '',
       createdBy: user.name,
-      teamId:user.teamId
+      teamId: user.teamId
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Project Title"),
@@ -149,24 +138,6 @@ const Dashboard = (props) => {
               <FormFeedback type="invalid">{validation.errors.description}</FormFeedback>
             ) : null}
           </div>
-          {/*<div className="form-group">*/}
-          {/*  <label htmlFor="projectManagers">Project Managers</label>*/}
-          {/*  <input*/}
-          {/*    type="text"*/}
-          {/*    className="form-control"*/}
-          {/*    id="projectManagers"*/}
-          {/*    placeholder="Enter project managers"*/}
-          {/*  />*/}
-          {/*</div>*/}
-          {/*<div className="form-group">*/}
-          {/*  <label htmlFor="projectEmployees">Project Employees</label>*/}
-          {/*  <input*/}
-          {/*    type="text"*/}
-          {/*    className="form-control"*/}
-          {/*    id="projectEmployees"*/}
-          {/*    placeholder="Enter project employees"*/}
-          {/*  />*/}
-          {/*</div>*/}
           <div className="mt-4">
             <button type="submit" className="btn btn-primary w-md">Submit</button>
           </div>
@@ -175,63 +146,76 @@ const Dashboard = (props) => {
     </Modal>
   )
 
-  if (!projects || projects?.length === 0) {
+  if (loading) {
+    return <Spinner color="primary" />
+  }
+
+  if (projects && projects.length === 0) {
     return (
       <React.Fragment>
         <div className="mt-5 text-center">
           <h1>Welcome to AIM</h1>
           <h3>Create a project to get started.</h3>
-          <Button size="lg block" onClick={()=>showProjectModal()}>+</Button>
+          <Button size="lg block" onClick={() => showProjectModal()}>+</Button>
           {newProjectModal}
         </div>
       </React.Fragment>
     )
   }
 
+  const removeProject = (projectId) => {
+    dispatch(deleteProject(projectId))
+  }
+
   const showDetails = (projectId) => {
     const project = projects?.filter(project => project._id === projectId)[0]
-    navigate('/project-details', {state:{project:project}})
+    dispatch(setCurrentProject(project))
+    navigate('/project-details')
   }
 
   const showBoard = (projectId) => {
-    navigate("/project-board", { state: { projectId:projectId } })
+    navigate("/project-board", { state: { projectId: projectId } })
   }
 
   const showCalendar = (projectId) => {
-    navigate("/calendar", { state: { projectId:projectId } })
+    navigate("/calendar", { state: { projectId: projectId } })
   }
 
   return (
-    <React.Fragment>
-      {user.role==="Admin" &&
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom:0 }}>
-        <Button size="lg block" onClick={() => showProjectModal()}>+</Button>
-        {newProjectModal}
-      </div>
-      }
-      <Row>
-        {projects?.map(project => {
-          return (
-            <Col key={project._id} mg={6} lg={6} xl={3}>
-              <Card>
-                <CardHeader className="card-header h4 font-16 mt-0">{project.title}</CardHeader>
-                <CardBody>
-                  <CardTitle className="h4">Created by: {project.createdBy}</CardTitle>
-                  <CardText>{project.description || "No description available"}</CardText>
-                  <Button onClick={() => showDetails(project._id)} className="btn btn-primary">
-                    View Details
-                  </Button>
-                  <Button style={{marginLeft:10}} onClick={()=>showBoard(project._id)}>View Board</Button>
-                  <Button style={{marginLeft:10}} onClick={()=>showCalendar(project._id)}>Calendar</Button>
-                </CardBody>
-              </Card>
-            </Col>
-          )
-        })}
-      </Row>
-
-    </React.Fragment>
-  )
+      <React.Fragment>
+        {user.role === "Admin" &&
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 0 }}>
+            <Button size="lg block" onClick={() => showProjectModal()}>+</Button>
+            {newProjectModal}
+          </div>
+        }
+        <Row>
+          {projects?.map(project => {
+            return (
+              <Col key={project._id} mg={6} lg={6} xl={3}>
+                <Card>
+                  <CardHeader className="card-header h4 font-16 mt-0" style={{display:'flex'}}>
+                    <div style={{flex:1}}>
+                    {project.title}
+                    </div>
+                    {user.role === "Admin" && <div style={{ justifyContent:'flex-end', margin:0,padding:0 }}>
+                      <Button onClick={() => removeProject(project._id)} className="bg-danger">Delete</Button>
+                    </div>}
+                  </CardHeader>
+                  <CardBody>
+                    <CardTitle className="h4">Created by: {project.createdBy}</CardTitle>
+                    <CardText>{project.description || "No description available"}</CardText>
+                    <Button onClick={() => showDetails(project._id)} className="btn btn-primary">View Details</Button>
+                    <Button style={{ marginLeft: 10 }} onClick={() => showBoard(project._id)}>View Board</Button>
+                    <Button style={{ marginLeft: 10 }} onClick={() => showCalendar(project._id)}>Shifts Calendar</Button>
+                  </CardBody>
+                </Card>
+              </Col>
+            )
+          })}
+        </Row>
+      </React.Fragment>
+    )
 }
 
 export default connect(null, { setBreadcrumbItems })(Dashboard);

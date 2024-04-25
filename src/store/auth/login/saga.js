@@ -25,6 +25,7 @@ function* loginUser({ payload: { user, history } }) {
 function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser");
+    localStorage.removeItem("user");
     history('/login');
     yield put(logoutUserSuccess());
   } catch (error) {

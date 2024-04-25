@@ -1,23 +1,23 @@
 import {
-  GET_PROJECTS,
-  GET_PROJECTS_SUCCESS,
-  GET_PROJECTS_FAIL,
-  ADD_PROJECT_SUCCESS,
-  ADD_PROJECT_FAIL,
-  ADD_PROJECT,
-  DELETE_PROJECT_SUCCESS,
-  DELETE_PROJECT_FAIL,
-  DELETE_PROJECT,
-  UPDATE_PROJECT_SUCCESS,
-  UPDATE_PROJECT_FAIL,
-  UPDATE_PROJECT,
-  EDIT_EMPLOYEES,
-  EDIT_EMPLOYEES_SUCCESS,
-  EDIT_EMPLOYEES_FAIL,
-  EDIT_MANAGERS,
-  EDIT_MANAGERS_SUCCESS,
-  EDIT_MANAGERS_FAIL,
-} from "./actionTypes";
+    GET_PROJECTS,
+    GET_PROJECTS_SUCCESS,
+    GET_PROJECTS_FAIL,
+    ADD_PROJECT_SUCCESS,
+    ADD_PROJECT_FAIL,
+    ADD_PROJECT,
+    DELETE_PROJECT_SUCCESS,
+    DELETE_PROJECT_FAIL,
+    DELETE_PROJECT,
+    UPDATE_PROJECT_SUCCESS,
+    UPDATE_PROJECT_FAIL,
+    UPDATE_PROJECT,
+    EDIT_EMPLOYEES,
+    EDIT_EMPLOYEES_SUCCESS,
+    EDIT_EMPLOYEES_FAIL,
+    EDIT_MANAGERS,
+    EDIT_MANAGERS_SUCCESS,
+    EDIT_MANAGERS_FAIL, SET_CURRENT_PROJECT
+} from "./actionTypes"
 
 const initialState = {
   projects: [],
@@ -71,7 +71,7 @@ const Projects = (state=initialState,action) => {
             return state = {
                 ...state,
                 loading: false,
-                projects: state.projects.filter(project => project.id !== action.payload),
+                projects: state.projects.filter(project => project._id !== action.payload),
             }
         case DELETE_PROJECT_FAIL:
             return state = {
@@ -88,7 +88,7 @@ const Projects = (state=initialState,action) => {
             return state = {
                 ...state,
                 loading: false,
-                projects: state.projects.map(project => project.id === action.payload.id ? action.payload : project),
+                projects: state.projects.map(project => project._id === action.payload._id ? action.payload : project),
                 currentProject: action.payload,
             }
         case UPDATE_PROJECT_FAIL:
@@ -132,6 +132,11 @@ const Projects = (state=initialState,action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
+            }
+        case SET_CURRENT_PROJECT:
+            return state = {
+                ...state,
+                currentProject: action.payload,
             }
         default:
             return state

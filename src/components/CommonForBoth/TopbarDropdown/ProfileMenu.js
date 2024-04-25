@@ -5,18 +5,18 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap
 //i18n
 import { withTranslation } from "react-i18next"
 // Redux
-import { connect } from "react-redux"
+import { connect, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false)
+  const user = useSelector(state => state.Login.user)
 
   const getImageSrc = () => {
     if(localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("user")) || {};
-      return "https://ui-avatars.com/api/?name=" + obj.name + "&background=random";
+      return "https://ui-avatars.com/api/?name=" + user.name + "&background=random";
     }
   }
 

@@ -21,10 +21,12 @@ const AdminSettings = (props) => {
     props.setBreadcrumbItems('Admin Settings', breadcrumbItems)
   })
 
+  const user = useSelector(state => state.Login?.user)
+
   useEffect(() => {
-    const teamId = JSON.parse(localStorage.getItem('user')).teamId;
+    const teamId = user.teamId;
     dispatch(getAllUsers(teamId))
-  }, [dispatch])
+  }, [dispatch,user])
 
   const [newUsers, setNewUsers] = useState([]);
   const existingUsers = useSelector(state => state.Admin?.users)
@@ -34,7 +36,7 @@ const AdminSettings = (props) => {
   const addEmail = () => {
     const email = document.getElementById('email').value;
     const role = document.getElementById('role').value;
-    const teamId = JSON.parse(localStorage.getItem('user')).teamId;
+    const teamId = user.teamId;
     setNewUsers([...newUsers, { email, role, teamId }])
   }
 
