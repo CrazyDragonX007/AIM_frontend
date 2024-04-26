@@ -12,6 +12,14 @@ function* loginUser({ payload: { user, history } }) {
         email: user.email,
         password: user.password,
       });
+      const token = localStorage.getItem("authUser");
+      if(token){
+        localStorage.removeItem("authUser");
+      }
+      const existingUser = localStorage.getItem("user");
+      if(existingUser){
+        localStorage.removeItem("user");
+      }
       localStorage.setItem("authUser", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       yield put(loginSuccess(response.data.user));
