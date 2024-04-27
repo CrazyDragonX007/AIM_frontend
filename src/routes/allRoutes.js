@@ -29,10 +29,7 @@ import Invite from "../pages/Admin/invite"
 
 const userRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
-
-  // //profile
   { path: "/profile", component: <UserProfile /> },
-
   { path: "/pages-blank", component: <PagesBlank /> },
   {path:"/project-details",component:<Details/>},
   {path:"/project-board",component:<Board/>},
@@ -53,7 +50,6 @@ const authRoutes = [
   { path: "/forgot-password", component: <ForgetPwd /> },
   { path: "/register", component: <Register /> },
   {path:'/invite/*',component:<Invite/>},
-
   { path: "/pages-404", component: <Pages404 /> },
   { path: "/pages-500", component: <Pages500 /> },
 ]

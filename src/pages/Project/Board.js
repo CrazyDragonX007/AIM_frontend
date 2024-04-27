@@ -28,7 +28,7 @@ import {
 
 import { useSelector, useDispatch } from "react-redux"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Link, useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Spinners from "components/Common/Spinner"
 
 import { setBreadcrumbItems } from "../../store/actions";
@@ -51,9 +51,7 @@ const Kanban = (props) => {
   })
 
   const dispatch = useDispatch()
-  const location = useLocation()
-  // eslint-disable-next-line
-  const [projectId,setProjectId] = useState(location.state?.projectId);
+  const project = useSelector(state => state.Projects?.currentProject)
   const  user = useSelector(state => state.Login?.user)
   const users = useSelector(state => state.Admin?.users)
 
@@ -78,8 +76,8 @@ const Kanban = (props) => {
   const [isLoading, setLoading] = useState(loading)
 
   useEffect(() => {
-    dispatch(onGetTasks(projectId))
-  }, [dispatch,projectId])
+    dispatch(onGetTasks(project._id))
+  }, [dispatch,project])
 
   const [sections, setSections] = useState()
   const [currentSection, setCurrentSection] = useState()
@@ -113,7 +111,6 @@ const Kanban = (props) => {
   const handleDeleteSection = (id) => {
     if(sections.find(section=>section._id===id).tasks.length>0){
       toast("Kindly reassign tasks in this section before deleting",{type:"error"})
-      // alert("Kindly reassign tasks in this section before deleting")
       return
     }
     dispatch(deleteSection(id))
@@ -144,7 +141,7 @@ const Kanban = (props) => {
         validation.resetForm()
       } else {
         const newCardData = {
-          projectId: projectId,
+          projectId: project._id,
           createdBy: user.name,
           currentSection: currentSection,
           title: values["title"],
@@ -163,7 +160,7 @@ const Kanban = (props) => {
     enableReinitialize: true,
     initialValues: {
       sectionTitle: '',
-      projectId: projectId
+      projectId: project._id
     },
     validationSchema: Yup.object({
       sectionTitle: Yup.string().required("Enter Section Title"),
@@ -462,10 +459,9 @@ const Kanban = (props) => {
                                                 </DropdownMenu>
                                               </UncontrolledDropdown>
                                               <div>
-                                                <h5 className="font-size-15">
+                                                <h5 className="font-size-20">
                                                   <Link
                                                     to="#"
-                                                    className="text-dark"
                                                     id="task-name"
                                                   >
                                                     {task?.title}
