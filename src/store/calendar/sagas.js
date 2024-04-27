@@ -2,39 +2,26 @@ import { takeEvery, put, call } from "redux-saga/effects"
 
 // Calender Redux States
 import {
-  ADD_NEW_EVENT,
-  DELETE_EVENT,
-  GET_CATEGORIES,
-  GET_EVENTS,
-  UPDATE_EVENT,
+  ADD_NEW_SHIFT,
+  DELETE_SHIFT, GET_PROJECT_TASKS,
+  GET_SHIFTS,
+  UPDATE_SHIFT
 } from "./actionTypes"
 import {
-  getEventsSuccess,
-  getEventsFail,
-  addEventFail,
-  addEventSuccess,
-  updateEventSuccess,
-  updateEventFail,
-  deleteEventSuccess,
-  deleteEventFail,
-  getCategoriesSuccess,
-  getCategoriesFail,
+  getShiftsSuccess,
+  getShiftsFail,
+  addShiftFail,
+  addShiftSuccess,
+  updateShiftSuccess,
+  updateShiftFail,
+  deleteShiftSuccess,
+  deleteShiftFail, getProjectTasksSuccess, getProjectTasksFail
 } from "./actions"
 import axios from "axios"
 
 const token = localStorage.getItem("authUser");
 
-const getEvents = async (projectId) => {
-  // const meetings_url = process.env.REACT_APP_BACKEND_URL + "/meetings/all_meetings";
-  // const meetingsResponse = await axios.get(meetings_url, {
-  //   params:{
-  //     projectId: "6625eccf4b00905d20684776"
-  //   },
-  //   headers: {
-  //     Authorization: token
-  //   }
-  // });
-  // }
+const getShifts = async (projectId) => {
   const shifts_url = process.env.REACT_APP_BACKEND_URL + "/shifts/all_shifts";
   const shiftsResponse = await axios.get(shifts_url, {
     params:{
@@ -47,74 +34,97 @@ const getEvents = async (projectId) => {
   return shiftsResponse.data;
 }
 
-const addNewEvent = async event => {
+const addNewShift = async shift => {
+  const url = process.env.REACT_APP_BACKEND_URL + "/shifts/create";
+  const response = await axios.post(url, shift, {
+    headers: {
+      Authorization: token
+    }
+  });
+  return response.data;
+}
+
+const updateShift = async shift => {
+  const url = process.env.REACT_APP_BACKEND_URL + "/shifts/edit";
+  const response = await axios.put(url, shift, {
+    headers: {
+      Authorization: token
+    }
+  });
+ return response.data;
+}
+
+const deleteShift = async shiftId => {
+  const url = process.env.REACT_APP_BACKEND_URL + "/shifts/delete";
+  const response = await axios.delete(url, {
+    params: {
+      id: shiftId
+    },
+    headers: {
+      Authorization: token
+    }
+  });
+  return response.data;
 
 }
 
-const updateEvent = async event => {
-
-}
-
-const deleteEvent = async event => {
-
-}
-
-const getCategories = async () => {
-
-}
-
-function* fetchEvents({payload:projectId}) {
+function* fetchShifts({payload:projectId}) {
   try {
-    console.log(projectId)
-    const response = yield call(getEvents,projectId)
-    yield put(getEventsSuccess(response))
+    const response = yield call(getShifts,projectId)
+    yield put(getShiftsSuccess(response))
   } catch (error) {
-    yield put(getEventsFail(error))
+    yield put(getShiftsFail(error))
   }
 }
 
-function* onAddNewEvent({ payload: event }) {
+function* onAddNewEvent({ payload: shift }) {
   try {
-    const response = yield call(addNewEvent, event)
-    yield put(addEventSuccess(response))
+    const response = yield call(addNewShift, shift)
+    yield put(addShiftSuccess(response.shift))
   } catch (error) {
-    yield put(addEventFail(error))
+    yield put(addShiftFail(error))
   }
 }
 
-function* onUpdateEvent({ payload: event }) {
+function* onUpdateEvent({ payload: shift }) {
   try {
-    const response = yield call(updateEvent, event)
-    yield put(updateEventSuccess(response))
+    const response = yield call(updateShift, shift)
+    yield put(updateShiftSuccess(response.shift))
   } catch (error) {
-    yield put(updateEventFail(error))
+    yield put(updateShiftFail(error))
   }
 }
 
-function* onDeleteEvent({ payload: event }) {
+function* onDeleteEvent({ payload: id }) {
   try {
-    const response = yield call(deleteEvent, event)
-    yield put(deleteEventSuccess(response))
+    const response = yield call(deleteShift, id)
+    yield put(deleteShiftSuccess(response.shift))
   } catch (error) {
-    yield put(deleteEventFail(error))
+    yield put(deleteShiftFail(error))
   }
 }
 
-function* onGetCategories() {
+function* getProjectTasks({payload:projectId}) {
   try {
-    const response = yield call(getCategories)
-    yield put(getCategoriesSuccess(response))
-  } catch (error) {
-    yield put(getCategoriesFail(error))
+    const url = process.env.REACT_APP_BACKEND_URL + "/tasks/project_tasks";
+    const response = yield axios.get(url, {
+      params: {
+        projectId: projectId
+      }
+    });
+    yield put(getProjectTasksSuccess(response.data));
+  }catch(error){
+    yield put(getProjectTasksFail(error))
+    console.log(error)
   }
 }
 
 function* calendarSaga() {
-  yield takeEvery(GET_EVENTS, fetchEvents)
-  yield takeEvery(ADD_NEW_EVENT, onAddNewEvent)
-  yield takeEvery(UPDATE_EVENT, onUpdateEvent)
-  yield takeEvery(DELETE_EVENT, onDeleteEvent)
-  yield takeEvery(GET_CATEGORIES, onGetCategories)
+  yield takeEvery(GET_SHIFTS, fetchShifts)
+  yield takeEvery(ADD_NEW_SHIFT, onAddNewEvent)
+  yield takeEvery(UPDATE_SHIFT, onUpdateEvent)
+  yield takeEvery(DELETE_SHIFT, onDeleteEvent)
+  yield takeEvery(GET_PROJECT_TASKS, getProjectTasks)
 }
 
 export default calendarSaga

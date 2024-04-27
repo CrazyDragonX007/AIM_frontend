@@ -77,7 +77,8 @@ const Admin = (state = initialState, action) => {
       return state = {
         ...state,
         loading: false,
-        message: action.payload,
+        message: action.payload.message,
+        users: state.users.map(user => user._id === action.payload.user._id ? action.payload.user : user)
       }
     case CHANGE_USER_ROLE_FAIL:
       return state = {

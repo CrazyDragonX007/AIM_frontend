@@ -1,94 +1,94 @@
 import {
-  GET_EVENTS_SUCCESS,
-  GET_EVENTS_FAIL,
-  ADD_EVENT_SUCCESS,
-  ADD_EVENT_FAIL,
-  UPDATE_EVENT_SUCCESS,
-  UPDATE_EVENT_FAIL,
-  DELETE_EVENT_SUCCESS,
-  DELETE_EVENT_FAIL,
-  GET_CATEGORIES_SUCCESS,
-  GET_CATEGORIES_FAIL, GET_EVENTS
+  GET_SHIFTS_SUCCESS,
+  GET_SHIFTS_FAIL,
+  ADD_SHIFT_SUCCESS,
+  ADD_SHIFT_FAIL,
+  UPDATE_SHIFT_SUCCESS,
+  UPDATE_SHIFT_FAIL,
+  DELETE_SHIFT_SUCCESS,
+  DELETE_SHIFT_FAIL,
+  GET_SHIFTS, GET_PROJECT_TASKS, GET_PROJECT_TASKS_SUCCESS, GET_PROJECT_TASKS_FAIL
 } from "./actionTypes"
 
 const INIT_STATE = {
-  events: [],
+  shifts: [],
   categories: [],
   error: {},
+  tasks:[]
 }
 
 const Calendar = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_EVENTS:
+    case GET_SHIFTS:
       return {
         ...state,
       }
 
-    case GET_EVENTS_SUCCESS:
+    case GET_SHIFTS_SUCCESS:
       return {
         ...state,
-        events: action.payload,
+        shifts: action.payload,
       }
 
-    case GET_EVENTS_FAIL:
+    case GET_SHIFTS_FAIL:
       return {
         ...state,
         error: action.payload,
       }
 
-    case ADD_EVENT_SUCCESS:
+    case ADD_SHIFT_SUCCESS:
       return {
         ...state,
-        events: [...state.events, action.payload],
+        shifts: [...state.shifts, action.payload],
       }
 
-    case ADD_EVENT_FAIL:
+    case ADD_SHIFT_FAIL:
       return {
         ...state,
         error: action.payload,
       }
 
-    case UPDATE_EVENT_SUCCESS:
+    case UPDATE_SHIFT_SUCCESS:
       return {
         ...state,
-        events: state.events.map(event =>
-          event.id.toString() === action.payload.id.toString()
-            ? { event, ...action.payload }
-            : event
-        ),
+        shifts: state.shifts.map(shift => shift._id.toString() === action.payload._id.toString() ? action.payload : shift),
       }
 
-    case UPDATE_EVENT_FAIL:
+    case UPDATE_SHIFT_FAIL:
       return {
         ...state,
         error: action.payload,
       }
 
-    case DELETE_EVENT_SUCCESS:
+    case DELETE_SHIFT_SUCCESS:
       return {
         ...state,
-        events: state.events.filter(
-          event => event.id.toString() !== action.payload.id.toString()
-        ),
+        shifts: state.shifts.filter(shift => shift._id.toString() !== action.payload._id.toString()),
       }
 
-    case DELETE_EVENT_FAIL:
+    case DELETE_SHIFT_FAIL:
       return {
         ...state,
         error: action.payload,
       }
 
-    case GET_CATEGORIES_SUCCESS:
+    case GET_PROJECT_TASKS:
       return {
         ...state,
-        categories: action.payload,
       }
 
-    case GET_CATEGORIES_FAIL:
+    case GET_PROJECT_TASKS_SUCCESS:
+      return {
+        ...state,
+        tasks: action.payload,
+      }
+
+    case GET_PROJECT_TASKS_FAIL:
       return {
         ...state,
         error: action.payload,
       }
+
     default:
       return state
   }

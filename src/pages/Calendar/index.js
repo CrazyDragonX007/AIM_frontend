@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import PropTypes from "prop-types"
-import { connect } from "react-redux"
+import { connect, useDispatch, useSelector } from "react-redux"
 import { isEmpty } from "lodash"
 import { setBreadcrumbItems } from '../../store/actions';
 
 import {
-  Button,
-  Card,
-  CardBody,
   Col,
   Modal,
   ModalBody,
@@ -18,34 +15,57 @@ import { AvField, AvForm } from "availity-reactstrap-validation"
 
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction"
+import interactionPlugin from "@fullcalendar/interaction"
 import BootstrapTheme from "@fullcalendar/bootstrap"
 import listPlugin from '@fullcalendar/list';
 
 import {
-  addNewEvent,
-  deleteEvent,
-  getCategories,
-  getEvents,
-  updateEvent,
+  addNewShift,
+  deleteShift, getProjectTasks,
+  getShifts,
+  updateShift
 } from "../../store/calendar/actions"
 import DeleteModal from "./DeleteModal"
 import { useLocation } from "react-router-dom"
+
+// TODO: Change modal to add fields: Title, description, date(selectedDay), start, end, location, assignTo and assignToTask
 
 const Calender = props => {
 
   document.title = "Calendar | AIM - All in One Manager";
 
-  const { events, categories, onGetCategories, onGetEvents } = props
+  const dispatch = useDispatch()
+  const { shifts, onGetShifts } = props
   const [setCalenderView, updatedCalenderView] = useState("dayGridMonth")
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
-  const [modalcategory, setModalcategory] = useState(false)
   const [event, setEvent] = useState({})
-  const [selectedDay, setSelectedDay] = useState(0)
+  // const [selectedDay, setSelectedDay] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
+  const user = useSelector(state => state.Login?.user)
+
   const location = useLocation()
   const projectId = location?.state?.projectId
+  const allUsers = useSelector(state => state.Admin?.users)
+  const project = useSelector(state => state.Projects?.currentProject)
+  const projectTasks = useSelector(state => state.calendar?.tasks)
+  const [usersInProject,setUsersInProject] = useState([])
+
+  useEffect(() => {
+    if(!projectTasks?.length>0){
+      dispatch(getProjectTasks(projectId))
+    }
+  }, [projectTasks,projectId,dispatch])
+
+  useEffect(() => {
+    if(project && allUsers){
+      const managers = project.assignedManagers?.map(m=>allUsers?.find(u=>u._id===m))
+      const employees = project.assignedEmployees?.map(e=>allUsers?.find(u=>u._id===e))
+      if(managers && employees) {
+        setUsersInProject([...managers, ...employees])
+      }
+    }
+  }, [project,allUsers])
 
   const calendarRef = useRef();
   const getApi = () => {
@@ -59,16 +79,11 @@ const Calender = props => {
   };
 
   useEffect(() => {
-    onGetCategories()
-    onGetEvents(projectId)
-    new Draggable(document.getElementById("external-events"), {
-      itemSelector: ".external-event",
-    })
-
+    onGetShifts(projectId)
     getInitialView()
     const api = getApi();
     changeView(setCalenderView, api);
-  }, [onGetCategories, onGetEvents, setCalenderView,projectId])
+  }, [onGetShifts, setCalenderView,projectId])
 
   useEffect(() => {
     if (!modal && !isEmpty(event) && !!isEdit) {
@@ -86,31 +101,29 @@ const Calender = props => {
     setModal(!modal)
   }
 
-  const toggleCategory = () => {
-    setModalcategory(!modalcategory)
-  }
-
   /**
    * Handling date click on calendar
    */
   const handleDateClick = arg => {
-    setSelectedDay(arg)
+    // setSelectedDay(arg)
     toggle()
-  }
+   }
 
   /**
    * Handling click on event on calendar
    */
   const handleEventClick = arg => {
     const event = arg.event
+    const temp = event.startStr?.split('T')
+    const start = temp[1].split('-')[0]
+    const end = event.endStr?.split('T')[1]?.split('-')[0]
     setEvent({
-      id: event.id,
+      id: event.extendedProps._id,
       title: event.title,
-      title_category: event.title_category,
-      start: event.start,
-      className: event.classNames,
-      category: event.classNames[0],
-      event_category: event.classNames[0],
+      start: start,
+      end: end || '00:00',
+      date:temp[0],
+      assignedTo: event.extendedProps.assignedTo
     })
     setIsEdit(true)
     toggle()
@@ -120,76 +133,42 @@ const Calender = props => {
    * Handling submit event on event form
    */
   const handleValidEventSubmit = (e, values) => {
-    const { onAddNewEvent, onUpdateEvent } = props
+    const start = new Date(values.date + " " + values.start)
+    const end = new Date(values.date + " " + values.end)
+    const { onAddNewShift, onUpdateShift } = props
     if (isEdit) {
-      const updateEvent = {
+      const updatedShift = {
         id: event.id,
         title: values.title,
-        classNames: values.category + " text-white",
-        start: event.start,
+        description: values.description,
+        date: values.date,
+        start: start,
+        end: end,
+        assignedTo: values.assignedTo,
       }
       // update event
-      onUpdateEvent(updateEvent)
+      onUpdateShift(updatedShift)
     } else {
-      const newEvent = {
-        id: Math.floor(Math.random() * 100),
-        title: values["title"],
-        start: selectedDay ? selectedDay.date : new Date(),
-        className: values.category + " text-white",
+      const newShift = {
+        title: values.title,
+        description: values.description,
+        date: values.date,
+        start: start,
+        end: end,
+        createdBy: user.name,
+        assignedTo: values.assignedTo,
+        projectId: projectId,
       }
-      // save new event
-      onAddNewEvent(newEvent)
+      onAddNewShift(newShift)
     }
-    setSelectedDay(null)
     toggle()
   }
 
-  const handleValidEventSubmitcategory = (values) => {
-    const { onAddNewEvent } = props
-
-    const newEvent = {
-      id: Math.floor(Math.random() * 100),
-      title: values["title_category"],
-      start: selectedDay ? selectedDay.date : new Date(),
-      className: values.event_category + " text-white",
-    }
-    // save new event
-
-    onAddNewEvent(newEvent)
-    toggleCategory()
-
-  }
-
-  /**
-   * On delete event
-   */
   const handleDeleteEvent = () => {
-    const { onDeleteEvent } = props
-    onDeleteEvent(event)
+    const { onDeleteShift } = props
+    onDeleteShift(event.id)
     setDeleteModal(false)
     toggle()
-  }
-
-  /**
-   * On category darg event
-   */
-  const onDrag = (event) => {
-    event.preventDefault()
-  }
-
-  /**
-   * On calendar drop event
-   */
-  const onDrop = event => {
-    const { onAddNewEvent } = props
-    const draggedEl = event.draggedEl
-    const newEvent = {
-      id: Math.floor(Math.random() * 100),
-      title: draggedEl.innerText,
-      start: event.date,
-      className: draggedEl.className,
-    }
-    onAddNewEvent(newEvent)
   }
 
   const getInitialView = () => {
@@ -222,44 +201,11 @@ const Calender = props => {
       />
 
       <Row className="mb-4">
-        <Col xl={3}>
-          <Card>
-            <CardBody className="d-grid">
-              <div className="d-grid">
-                <Button
-                  color="primary"
-                  className="btn-block"
-                  onClick={toggleCategory}
-                >
-                  <i className="mdi mdi-plus-circle-outline" />
-                  {" "}Create New Event
-                </Button>
-              </div>
-              <div id="external-events">
-                <br />
-                <p className="text-muted">
-                  Drag and drop your event or click in the calendar
-                </p>
-                {categories &&
-                  categories.map((category, i) => (
-                    <div
-                      className={`external-event fc-event ${category.type} text-white`}
-                      key={"cat-" + category.id}
-                      draggable
-                      onDrag={event => onDrag(event, category)}
-                    >
-                      <i className="mdi mdi-checkbox-blank-circle font-size-11 me-2" />
-                      {category.title}
-                    </div>
-                  ))}
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col className="col-xl-9">
+        <Col className="col-xl-12">
           <div className="card mt-4 mt-xl-0 mb-0">
             <div className="card-body">
               {/* fullcalendar control */}
+              {shifts &&
               <FullCalendar
                 plugins={[
                   BootstrapTheme,
@@ -275,22 +221,20 @@ const Calender = props => {
                   center: "title",
                   right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
                 }}
-                events={events}
+                events={shifts}
                 editable={true}
-                droppable={true}
                 selectable={true}
                 dateClick={handleDateClick}
                 eventClick={handleEventClick}
-                drop={onDrop}
                 ref={calendarRef}
                 initialView={setCalenderView}
                 windowResize={getInitialView}
               />
-
+              }
               {/* New/Edit event modal */}
               <Modal isOpen={modal} className={props.className}>
                 <ModalHeader toggle={toggle} tag="h4">
-                  {!!isEdit ? "Edit Event" : "Add Event"}
+                  {!!isEdit ? "Edit Shift" : "Add Shift"}
                 </ModalHeader>
                 <ModalBody>
                   <AvForm onValidSubmit={handleValidEventSubmit}>
@@ -298,7 +242,7 @@ const Calender = props => {
                       <Col className="col-12 mb-3">
                         <AvField
                           name="title"
-                          label="Event Name"
+                          label="Shift title"
                           type="text"
                           errorMessage="Invalid name"
                           validate={{
@@ -307,22 +251,58 @@ const Calender = props => {
                           value={event ? event.title : ""}
                         />
                       </Col>
-                      <Col className="col-12 mb-3">
+                    </Row>
+                    <Row>
+                      <Col className="col-6 mb-3">
                         <AvField
-                          type="select"
-                          name="category"
-                          label="Select Category"
+                          name="date"
+                          label="Date"
+                          type="date"
+                          errorMessage="Invalid date"
                           validate={{
                             required: { value: true },
                           }}
-                          value={event ? event.category : "bg-primary"}
-                        >
-                          <option value="bg-danger">Danger</option>
-                          <option value="bg-success">Success</option>
-                          <option value="bg-primary">Primary</option>
-                          <option value="bg-info">Info</option>
-                          <option value="bg-dark">Dark</option>
-                          <option value="bg-warning">Warning</option>
+                          value={event ? event.date : null}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-6 mb-3">
+                        <AvField
+                          name="start"
+                          label="Start Time"
+                          type="time"
+                          errorMessage="Invalid time"
+                          validate={{
+                            required: { value: true },
+                          }}
+                          value={event ? event.start : ""}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-6 mb-3">
+                        <AvField
+                          name="end"
+                          label="End Time"
+                          type="time"
+                          errorMessage="Invalid time"
+                          validate={{
+                            required: { value: true },
+                          }}
+                          value={event ? event.end : ""}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-6 mb-3">
+                        <AvField type='select' name='assignedTo' value={event?event.assignedTo:''} label='Assign Shift to user' validate={{required:true}} errorMessage='Select a user to assign the shift.'>
+                          <option value=''>Select User</option>
+                          {usersInProject.map((option) => (
+                            <option key={option.name} value={option._id}>
+                              {option.name}
+                            </option>
+                          ))}
                         </AvField>
                       </Col>
                     </Row>
@@ -357,108 +337,34 @@ const Calender = props => {
                   </AvForm>
                 </ModalBody>
               </Modal>
-
-              <Modal
-                isOpen={modalcategory}
-                toggle={toggleCategory}
-                className={props.className}
-              >
-                <ModalHeader toggle={toggleCategory} tag="h4">
-                  Add a category
-                </ModalHeader>
-                <ModalBody>
-                  <AvForm
-                    onValidSubmit={handleValidEventSubmitcategory}
-                  >
-                    <Row form>
-                      <Col className="col-12 mb-3">
-                        <AvField
-                          name="title_category"
-                          label="Category Name"
-                          type="text"
-                          errorMessage="Invalid name"
-                          validate={{
-                            required: { value: true },
-                          }}
-                          value={
-                            event.title_category
-                              ? event.title_category
-                              : ""
-                          }
-                        />
-                      </Col>
-                      <Col className="col-12 mb-3">
-                        <AvField
-                          type="select"
-                          name="event_category"
-                          label="Choose Category Color"
-                          value={
-                            event ? event.event_category : "bg-primary"
-                          }
-                        >
-                          <option value="bg-danger">Danger</option>
-                          <option value="bg-success">Success</option>
-                          <option value="bg-primary">Primary</option>
-                          <option value="bg-info">Info</option>
-                          <option value="bg-dark">Dark</option>
-                          <option value="bg-warning">Warning</option>
-                        </AvField>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <div className="text-right">
-                          <button
-                            type="button"
-                            className="btn btn-light me-2"
-                            onClick={toggleCategory}
-                          >
-                            Close
-                          </button>
-                          <button
-                            type="submit"
-                            className="btn btn-success save-event"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </Col>
-                    </Row>
-                  </AvForm>
-                </ModalBody>
-              </Modal>
             </div>
           </div>
         </Col>
       </Row>
-
     </React.Fragment>
   )
 }
 
 Calender.propTypes = {
-  events: PropTypes.array,
-  categories: PropTypes.array,
+  shifts: PropTypes.array,
   className: PropTypes.string,
-  onGetEvents: PropTypes.func,
-  onAddNewEvent: PropTypes.func,
-  onUpdateEvent: PropTypes.func,
-  onDeleteEvent: PropTypes.func,
+  onGetShifts: PropTypes.func,
+  onAddNewShifts: PropTypes.func,
+  onUpdateShifts: PropTypes.func,
+  onDeleteShift: PropTypes.func,
   c: PropTypes.func,
   onSetBreadCrumbs: PropTypes.func,
 }
 
 const mapStateToProps = ({ calendar }) => ({
-  events: calendar.events,
-  categories: calendar.categories,
+  shifts: calendar.shifts,
 })
 
 const mapDispatchToProps = dispatch => ({
-  onGetEvents: (projectId) => dispatch(getEvents(projectId)),
-  onGetCategories: () => dispatch(getCategories()),
-  onAddNewEvent: event => dispatch(addNewEvent(event)),
-  onUpdateEvent: event => dispatch(updateEvent(event)),
-  onDeleteEvent: event => dispatch(deleteEvent(event)),
+  onGetShifts: projectId => dispatch(getShifts(projectId)),
+  onAddNewShift: shift => dispatch(addNewShift(shift)),
+  onUpdateShift: shift => dispatch(updateShift(shift)),
+  onDeleteShift: shift => dispatch(deleteShift(shift)),
   onSetBreadCrumbs: (title, breadcrumbItems) => dispatch(setBreadcrumbItems(title, breadcrumbItems)),
 })
 

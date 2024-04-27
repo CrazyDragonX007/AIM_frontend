@@ -1,91 +1,89 @@
 import {
-  GET_EVENTS,
-  GET_EVENTS_FAIL,
-  GET_EVENTS_SUCCESS,
-  ADD_NEW_EVENT,
-  ADD_EVENT_SUCCESS,
-  ADD_EVENT_FAIL,
-  UPDATE_EVENT,
-  UPDATE_EVENT_SUCCESS,
-  UPDATE_EVENT_FAIL,
-  DELETE_EVENT,
-  DELETE_EVENT_SUCCESS,
-  DELETE_EVENT_FAIL,
-  GET_CATEGORIES,
-  GET_CATEGORIES_SUCCESS,
-  GET_CATEGORIES_FAIL,
+  GET_SHIFTS,
+  GET_SHIFTS_FAIL,
+  GET_SHIFTS_SUCCESS,
+  ADD_NEW_SHIFT,
+  ADD_SHIFT_SUCCESS,
+  ADD_SHIFT_FAIL,
+  UPDATE_SHIFT,
+  UPDATE_SHIFT_SUCCESS,
+  UPDATE_SHIFT_FAIL,
+  DELETE_SHIFT,
+  DELETE_SHIFT_SUCCESS,
+  DELETE_SHIFT_FAIL, GET_PROJECT_TASKS, GET_PROJECT_TASKS_SUCCESS
 } from "./actionTypes"
 
-export const getEvents = projectId => ({
-  type: GET_EVENTS,
+export const getShifts = projectId => ({
+  type: GET_SHIFTS,
   payload: projectId,
 })
 
-export const getEventsSuccess = events => ({
-  type: GET_EVENTS_SUCCESS,
+export const getShiftsSuccess = events => ({
+  type: GET_SHIFTS_SUCCESS,
   payload: events,
 })
 
-export const getEventsFail = error => ({
-  type: GET_EVENTS_FAIL,
+export const getShiftsFail = error => ({
+  type: GET_SHIFTS_FAIL,
   payload: error,
 })
 
-export const addNewEvent = event => ({
-  type: ADD_NEW_EVENT,
+export const addNewShift = event => ({
+  type: ADD_NEW_SHIFT,
   payload: event,
 })
 
-export const addEventSuccess = event => ({
-  type: ADD_EVENT_SUCCESS,
+export const addShiftSuccess = event => ({
+  type: ADD_SHIFT_SUCCESS,
   payload: event,
 })
 
-export const addEventFail = error => ({
-  type: ADD_EVENT_FAIL,
+export const addShiftFail = error => ({
+  type: ADD_SHIFT_FAIL,
   payload: error,
 })
 
-export const updateEvent = event => ({
-  type: UPDATE_EVENT,
+export const updateShift = event => ({
+  type: UPDATE_SHIFT,
   payload: event,
 })
 
-export const updateEventSuccess = event => ({
-  type: UPDATE_EVENT_SUCCESS,
+export const updateShiftSuccess = event => ({
+  type: UPDATE_SHIFT_SUCCESS,
   payload: event,
 })
 
-export const updateEventFail = error => ({
-  type: UPDATE_EVENT_FAIL,
+export const updateShiftFail = error => ({
+  type: UPDATE_SHIFT_FAIL,
   payload: error,
 })
 
-export const deleteEvent = event => ({
-  type: DELETE_EVENT,
+export const deleteShift = event => ({
+  type: DELETE_SHIFT,
   payload: event,
 })
 
-export const deleteEventSuccess = event => ({
-  type: DELETE_EVENT_SUCCESS,
+export const deleteShiftSuccess = event => ({
+  type: DELETE_SHIFT_SUCCESS,
   payload: event,
 })
 
-export const deleteEventFail = error => ({
-  type: DELETE_EVENT_FAIL,
+export const deleteShiftFail = error => ({
+  type: DELETE_SHIFT_FAIL,
   payload: error,
 })
 
-export const getCategories = () => ({
-  type: GET_CATEGORIES,
+export const getProjectTasks = projectId => ({
+  type: GET_PROJECT_TASKS,
+  payload: projectId,
 })
 
-export const getCategoriesSuccess = categories => ({
-  type: GET_CATEGORIES_SUCCESS,
-  payload: categories,
+export const getProjectTasksSuccess = tasks => ({
+  type: GET_PROJECT_TASKS_SUCCESS,
+  payload: tasks,
 })
 
-export const getCategoriesFail = error => ({
-  type: GET_CATEGORIES_FAIL,
+export const getProjectTasksFail = error => ({
+  type: GET_SHIFTS_FAIL,
   payload: error,
 })

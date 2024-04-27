@@ -23,6 +23,7 @@ import {
 import {  useNavigate } from "react-router-dom"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { getAllUsers } from "../../store/admin/actions"
 
 const Dashboard = (props) => {
   const dispatch = useDispatch()
@@ -37,6 +38,7 @@ const Dashboard = (props) => {
   const user = useSelector(state=>state.Login?.user)
 
   useEffect(() => {
+    dispatch(getAllUsers(user.teamId));
     props.setBreadcrumbItems("Dashboard", breadcrumbItems)
   })
 
@@ -167,17 +169,23 @@ const Dashboard = (props) => {
     dispatch(deleteProject(projectId))
   }
 
-  const showDetails = (projectId) => {
+  const setProject = (projectId) => {
     const project = projects?.filter(project => project._id === projectId)[0]
     dispatch(setCurrentProject(project))
+  }
+
+  const showDetails = (projectId) => {
+    setProject(projectId)
     navigate('/project-details')
   }
 
   const showBoard = (projectId) => {
+    setProject(projectId)
     navigate("/project-board", { state: { projectId: projectId } })
   }
 
   const showCalendar = (projectId) => {
+    setProject(projectId)
     navigate("/calendar", { state: { projectId: projectId } })
   }
 

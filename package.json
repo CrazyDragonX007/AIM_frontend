@@ -36,8 +36,6 @@
     "mdbreact": "^5.2.0",
     "metismenujs": "^1.4.0",
     "mkdirp": "^3.0.1",
-    "moment": "2.29.4",
-    "moment-timezone": "^0.5.43",
     "node-sass": "^9.0.0",
     "nouislider-react": "^3.4.1",
     "prop-types": "^15.8.1",
