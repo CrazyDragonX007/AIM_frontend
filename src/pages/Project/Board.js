@@ -23,7 +23,7 @@ import {
   getTasks as onGetTasks,
   addTask as onAddTask,
   updateTask as onUpdateTaskData,
-  deleteTask as OnDeleteTask, changeSection, addSection, assignTask, updateSection, deleteSection
+  deleteTask as OnDeleteTask, changeSection, addSection, updateSection, deleteSection
 } from "store/tasks/actions"
 
 import { useSelector, useDispatch } from "react-redux"
@@ -53,13 +53,25 @@ const Kanban = (props) => {
   const dispatch = useDispatch()
   const project = useSelector(state => state.Projects?.currentProject)
   const  user = useSelector(state => state.Login?.user)
-  const users = useSelector(state => state.Admin?.users)
+  const allUsers = useSelector(state => state.Admin?.users)
+  const [usersInProject,setUsersInProject] = useState([])
 
   useEffect(() => {
-    if(users.length===0){
+    if(allUsers.length===0){
       dispatch(getAllUsers(user.teamId))
     }
-  }, [dispatch,user,users])
+  }, [dispatch,user,allUsers])
+
+  useEffect(() => {
+    if(project && allUsers){
+      const managers = project.assignedManagers?.map(m=>allUsers?.find(u=>u._id===m))
+      const employees = project.assignedEmployees?.map(e=>allUsers?.find(u=>u._id===e))
+      const admins = allUsers?.filter(u=>u.role==="Admin")
+      if(managers && employees) {
+        setUsersInProject([...managers, ...employees, ...admins])
+      }
+    }
+  }, [project,allUsers])
 
   const [modal, setModal] = useState(false)
   const toggle = () => {
@@ -98,9 +110,9 @@ const Kanban = (props) => {
   const [sectionModal, setSectionModal] = useState(false)
   const [editSectionModalFlag,setEditSectionModalFlag] = useState(false)
 
-  const options = users.map(user => {
+  const options = usersInProject.map(user => {
     return {
-      value: user.name,
+      value: user._id,
       label: user.name
     }
   })
@@ -133,11 +145,10 @@ const Kanban = (props) => {
           _id: task._id,
           title: values.title,
           description: values.description,
+          newAssign: selectedUser.value,
+          oldAssign: task.assignedTo
         }
         dispatch(onUpdateTaskData(updatedCards))
-        if(selectedUser.value!==task.assignedTo){
-          dispatch(assignTask({id:task._id,newAssign:selectedUser.value}))
-        }
         validation.resetForm()
       } else {
         const newCardData = {
@@ -148,7 +159,6 @@ const Kanban = (props) => {
           description: values["description"],
           assignedTo: selectedUser.value
         }
-        console.log(newCardData)
         dispatch(onAddTask(newCardData))
         validation.resetForm()
       }
@@ -187,17 +197,20 @@ const Kanban = (props) => {
     }
   })
 
+  const getAssignedToLabel = task => {
+    return options.find(t=>t.value===task?.assignedTo)?.label
+  }
+
   const handleTaskEdit = (arg, line) => {
     setModal(true)
     setTask(arg)
     setCurrentSection(line._id)
     setIsEdit(true)
-    setSelectedUser({value:arg.assignedTo,label:arg.assignedTo})
+    setSelectedUser({value:arg.assignedTo,label:getAssignedToLabel(arg)})
     toggle()
   }
 
   const handleAddNewTask = line => {
-    console.log(line)
     setTask("")
     setIsEdit(false)
     toggle()
@@ -471,7 +484,7 @@ const Kanban = (props) => {
                                               Description: {task?.description}
                                               <br/><br/>
                                               <h6>
-                                              Assigned To: {task?.assignedTo}
+                                              Assigned To: {getAssignedToLabel(task)}
                                               </h6>
                                             </CardBody>
                                           </div>

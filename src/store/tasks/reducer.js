@@ -64,12 +64,10 @@ const Tasks = (state = INIT_STATE, action) => {
       }
 
     case ADD_TASK_SUCCESS:
-      console.log(action.payload)
       return {
         ...state,
         sections: state.sections.map(s => {
           if (s._id === action.payload.currentSection) {
-            console.log(s)
             return {
               ...s,
               tasks: [...s.tasks, action.payload],

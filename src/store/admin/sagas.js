@@ -15,7 +15,6 @@ const token = localStorage.getItem("authUser");
 
 function* inviteUsers({ payload:  emails  }) {
   try {
-    console.log(emails)
     const url = process.env.REACT_APP_BACKEND_URL + "/users/invite";
     const response = yield axios.post(url, { invites:emails }, {
       headers: {

@@ -90,8 +90,14 @@ function* onAddTask({ payload: task }) {
 
 function* onUpdateTask({ payload: task }) {
   try {
+    const {oldAssign,newAssign} = task;
+    delete task.oldAssign;
+    delete task.newAssign;
     const response = yield call(updateTask, task)
     yield put(updateTaskSuccess(response.data))
+    if(oldAssign !== newAssign){
+      yield call(assignTask, {payload:{id:task._id,newAssign:newAssign}})
+    }
     toast.success("Task Updated Successfully", { autoClose: 2000 });
   } catch (error) {
     yield put(updateTaskFail(error))

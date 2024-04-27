@@ -78,7 +78,6 @@ const Details = () => {
   }
 
   const addEmployeeToProject = (employee) => {
-    console.log(employee);
     setProjectEmployees([...projectEmployees, employee])
   }
 

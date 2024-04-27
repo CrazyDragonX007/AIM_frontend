@@ -114,7 +114,7 @@ const Dashboard = (props) => {
               onBlur={validation.handleBlur}
               value={validation.values.title || ""}
               invalid={
-                validation.touched.title && validation.errors.title ? true : false
+                !!(validation.touched.title && validation.errors.title)
               }
             />
             {validation.touched.title && validation.errors.title ? (
@@ -133,7 +133,7 @@ const Dashboard = (props) => {
               onBlur={validation.handleBlur}
               value={validation.values.description || ""}
               invalid={
-                validation.touched.description && validation.errors.description ? true : false
+                !!(validation.touched.description && validation.errors.description)
               }
             />
             {validation.touched.description && validation.errors.description ? (
@@ -199,27 +199,30 @@ const Dashboard = (props) => {
         }
         <Row>
           {projects?.map(project => {
-            return (
-              <Col key={project._id} mg={6} lg={6} xl={3}>
-                <Card>
-                  <CardHeader className="card-header h4 font-16 mt-0" style={{display:'flex'}}>
-                    <div style={{flex:1}}>
-                    {project.title}
-                    </div>
-                    {user.role === "Admin" && <div style={{ justifyContent:'flex-end', margin:0,padding:0 }}>
-                      <Button onClick={() => removeProject(project._id)} className="bg-danger">Delete</Button>
-                    </div>}
-                  </CardHeader>
-                  <CardBody>
-                    <CardTitle className="h4">Created by: {project.createdBy}</CardTitle>
-                    <CardText>{project.description || "No description available"}</CardText>
-                    <Button onClick={() => showDetails(project._id)} className="btn btn-primary">View Details</Button>
-                    <Button style={{ marginLeft: 10 }} onClick={() => showBoard(project._id)}>View Board</Button>
-                    <Button style={{ marginLeft: 10 }} onClick={() => showCalendar(project._id)}>Shifts Calendar</Button>
-                  </CardBody>
-                </Card>
-              </Col>
-            )
+              if(user.role === "Admin" || project.assignedEmployees.includes(user._id) || project.assignedManagers.includes(user._id)) {
+                return (
+                  <Col key={project._id} mg={6} lg={6} xl={3}>
+                    <Card>
+                      <CardHeader className="card-header h4 font-16 mt-0" style={{ display: 'flex' }}>
+                        <div style={{ flex: 1 }}>
+                          {project.title}
+                        </div>
+                        {user.role === "Admin" && <div style={{ justifyContent: 'flex-end', margin: 0, padding: 0 }}>
+                          <Button onClick={() => removeProject(project._id)} className="bg-danger">Delete</Button>
+                        </div>}
+                      </CardHeader>
+                      <CardBody>
+                        <CardTitle className="h4">Created by: {project.createdBy}</CardTitle>
+                        <CardText>{project.description || "No description available"}</CardText>
+                        <Button onClick={() => showDetails(project._id)} className="btn btn-primary">View
+                          Details</Button>
+                        <Button style={{ marginLeft: 10 }} onClick={() => showBoard(project._id)}>View Board</Button>
+                        <Button style={{ marginLeft: 10 }} onClick={() => showCalendar(project._id)}>Shifts
+                          Calendar</Button>
+                      </CardBody>
+                    </Card>
+                  </Col>)
+              }else return null
           })}
         </Row>
       </React.Fragment>

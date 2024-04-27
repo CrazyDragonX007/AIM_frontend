@@ -102,7 +102,7 @@ const Calender = props => {
   /**
    * Handling date click on calendar
    */
-  const handleDateClick = arg => {
+  const handleDateClick = () => {
     // setSelectedDay(arg)
     toggle()
    }
@@ -118,6 +118,7 @@ const Calender = props => {
     setEvent({
       id: event.extendedProps._id,
       title: event.title,
+      description: event.extendedProps.description,
       start: start,
       end: end || '00:00',
       date:temp[0],
@@ -242,11 +243,21 @@ const Calender = props => {
                           name="title"
                           label="Shift title"
                           type="text"
-                          errorMessage="Invalid name"
+                          errorMessage="Invalid title"
                           validate={{
                             required: { value: true },
                           }}
                           value={event ? event.title : ""}
+                        />
+                      </Col>
+                    </Row>
+                    <Row form>
+                      <Col className="col-12 mb-3">
+                        <AvField
+                          name="description"
+                          label="Shift Description"
+                          type="textarea"
+                          value={event ? event.description : ""}
                         />
                       </Col>
                     </Row>
@@ -296,9 +307,9 @@ const Calender = props => {
                       <Col className="col-6 mb-3">
                         <AvField type='select' name='assignedTo' value={event?event.assignedTo:''} label='Assign Shift to user' validate={{required:true}} errorMessage='Select a user to assign the shift.'>
                           <option value=''>Select User</option>
-                          {usersInProject.map((option) => (
-                            <option key={option.name} value={option._id}>
-                              {option.name}
+                          {usersInProject?.map((option) => (
+                            <option key={option?.name} value={option?._id}>
+                              {option?.name}
                             </option>
                           ))}
                         </AvField>
