@@ -52,10 +52,8 @@ const Calender = props => {
   const [usersInProject,setUsersInProject] = useState([])
 
   useEffect(() => {
-    if(!projectTasks?.length>0){
       dispatch(getProjectTasks(projectId))
-    }
-  }, [projectTasks,projectId,dispatch])
+  }, [projectId,dispatch])
 
   useEffect(() => {
     if(project && allUsers){
@@ -306,6 +304,18 @@ const Calender = props => {
                         </AvField>
                       </Col>
                     </Row>
+                    {/*<Row>*/}
+                    {/*  <Col className="col-6 mb-3">*/}
+                    {/*    <AvField type='select' name='assignedToTask' value={event?event.assignedToTask:''} label='Assign Shift to a Task'>*/}
+                    {/*      <option value=''>Select Task</option>*/}
+                    {/*      {projectTasks.map((option) => (*/}
+                    {/*        <option key={option.title} value={option._id}>*/}
+                    {/*          {option.title}*/}
+                    {/*        </option>*/}
+                    {/*      ))}*/}
+                    {/*    </AvField>*/}
+                    {/*  </Col>*/}
+                    {/*</Row>*/}
                     <Row>
                       <Col>
                         <div className="text-end">
@@ -349,6 +359,7 @@ Calender.propTypes = {
   shifts: PropTypes.array,
   className: PropTypes.string,
   onGetShifts: PropTypes.func,
+  onGetProjectTasks: PropTypes.func,
   onAddNewShifts: PropTypes.func,
   onUpdateShifts: PropTypes.func,
   onDeleteShift: PropTypes.func,
@@ -362,6 +373,7 @@ const mapStateToProps = ({ calendar }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetShifts: projectId => dispatch(getShifts(projectId)),
+  onGetProjectTasks: projectId => dispatch(getProjectTasks(projectId)),
   onAddNewShift: shift => dispatch(addNewShift(shift)),
   onUpdateShift: shift => dispatch(updateShift(shift)),
   onDeleteShift: shift => dispatch(deleteShift(shift)),
