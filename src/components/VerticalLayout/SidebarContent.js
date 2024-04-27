@@ -156,16 +156,18 @@ const SidebarContent = props => {
               </Link>
             </li>
             {projects?.map((project,index) => {
-              return (
-                <li key={index}>
-                  <Link to="/project-details" className="waves-effect">
-                    <Button onClick={()=>dispatch(setCurrentProject(project))} className='bg-transparent border-0'>
-                    <i className="mdi mdi-view-dashboard"></i>
-                    <span>{props.t(project.title)}</span>
-                    </Button>
-                  </Link>
-                </li>
-              )
+              if(user.role === "Admin" || project.assignedEmployees.includes(user._id) || project.assignedManagers.includes(user._id)) {
+                return (
+                  <li key={index}>
+                    <Link to="/project-details" className="waves-effect">
+                      <Button onClick={() => dispatch(setCurrentProject(project))} className='bg-transparent border-0'>
+                        <i className="mdi mdi-view-dashboard"></i>
+                        <span>{props.t(project.title)}</span>
+                      </Button>
+                    </Link>
+                  </li>
+                )
+              }else return null
             })}
             {user && user.role === 'Admin' && (
                 <li>
