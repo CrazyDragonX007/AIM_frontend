@@ -48,7 +48,7 @@ const Calender = props => {
   const projectId = location?.state?.projectId
   const allUsers = useSelector(state => state.Admin?.users)
   const project = useSelector(state => state.Projects?.currentProject)
-  const projectTasks = useSelector(state => state.calendar?.tasks)
+  // const projectTasks = useSelector(state => state.calendar?.tasks)
   const [usersInProject,setUsersInProject] = useState([])
 
   useEffect(() => {
