@@ -189,6 +189,8 @@ const Dashboard = (props) => {
     navigate("/calendar", { state: { projectId: projectId } })
   }
 
+  let showProjectData = false;
+
   return (
       <React.Fragment>
         {user.role === "Admin" &&
@@ -200,6 +202,7 @@ const Dashboard = (props) => {
         <Row>
           {projects?.map(project => {
               if(user.role === "Admin" || project.assignedEmployees.includes(user._id) || project.assignedManagers.includes(user._id)) {
+                showProjectData = true;
                 return (
                   <Col key={project._id} mg={6} lg={6} xl={3}>
                     <Card>
@@ -224,6 +227,7 @@ const Dashboard = (props) => {
                   </Col>)
               }else return null
           })}
+          {(!showProjectData)?<h4>You have not been assigned to any projects by your admin</h4>:null}
         </Row>
       </React.Fragment>
     )
