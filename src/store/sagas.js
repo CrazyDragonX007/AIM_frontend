@@ -10,6 +10,7 @@ import ProjectSaga from "./projects/sagas"
 import TasksSaga from "./tasks/sagas"
 import calendarSaga from "./calendar/sagas"
 import adminSaga from "./admin/sagas"
+import chatSaga from "./chat/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -21,6 +22,7 @@ export default function* rootSaga() {
     LayoutSaga(),
     fork(calendarSaga),
     adminSaga(),
+    chatSaga(),
     // Private
     ProjectSaga(),
     TasksSaga()
