@@ -54,14 +54,12 @@ const Login = props => {
                     <Col md={8} lg={6} xl={5}>
                         <Card className="overflow-hidden">
                             <CardBody className="pt-0">
-
                                 <h3 className="text-center mt-5 mb-4">
                                     <Link to="/" className="d-block auth-logo">
                                         <img src={logoDark} alt="" height="30" className="auth-logo-dark" />
                                         <img src={logoLight} alt="" height="30" className="auth-logo-light" />
                                     </Link>
                                 </h3>
-
                                 <div className="p-3">
                                     <h4 className="text-muted font-size-18 mb-1 text-center">Welcome Back!</h4>
                                     <p className="text-muted text-center">Sign in to continue to AIM.</p>
@@ -120,28 +118,17 @@ const Login = props => {
                                                 <button className="btn btn-primary w-md waves-effect waves-light" type="submit">Log In</button>
                                             </div>
                                         </Row>
-                                        {/*<Row className="form-group mb-0">*/}
-                                        {/*    <div className="col-12 mt-4">*/}
-                                        {/*        <Link to="/forgot-password" className="text-muted"><i className="mdi mdi-lock"></i> Forgot your password?</Link>*/}
-                                        {/*    </div>*/}
-                                        {/*</Row>*/}
+                                        <Row className="form-group mb-0">
+                                            <div className="col-12 mt-4">
+                                                <Link to="/forgot-password" className="text-muted"><i className="mdi mdi-lock"></i> Forgot your password?</Link>
+                                            </div>
+                                        </Row>
                                     </Form>
                                 </div>
                             </CardBody>
                         </Card>
-                        {/*<Link*/}
-                        {/*      to="#"*/}
-                        {/*      className="social-list-item bg-danger text-white border-danger"*/}
-                        {/*      onClick={e => {*/}
-                        {/*        e.preventDefault();*/}
-                        {/*        socialResponse("google");*/}
-                        {/*      }}*/}
-                        {/*    >*/}
-                              {/*<i className="mdi mdi-google" />*/}
-                        {/*    </Link>*/}
                         <div className="mt-5 text-center">
                             <p>Don't have an account ? <Link to="/register" className="text-primary"> Signup Now </Link></p>
-                            {/*© {new Date().getFullYear()} Lexa <span className="d-none d-sm-inline-block"> - Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand.</span>*/}
                         </div>
                     </Col>
                 </Row>

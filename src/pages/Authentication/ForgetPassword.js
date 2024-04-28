@@ -93,7 +93,7 @@ const ForgetPasswordPage = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            !!(validation.touched.email && validation.errors.email)
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
@@ -112,7 +112,6 @@ const ForgetPasswordPage = props => {
               </Card>
               <div className="mt-5 text-center">
                 <p>Remember It ? <Link to="/login" className="text-primary"> Sign In Here </Link> </p>
-                © {new Date().getFullYear()} Lexa <span className="d-none d-sm-inline-block"> - Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand.</span>
               </div>
             </Col>
           </Row>
