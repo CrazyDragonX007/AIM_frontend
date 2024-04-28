@@ -24,7 +24,6 @@ const login = (state = initialState, action) => {
       state = {
         ...state,
         loading: false,
-        isUserLogout: false,
         user: action.payload,
       }
       break
@@ -32,10 +31,10 @@ const login = (state = initialState, action) => {
       state = { ...state }
       break
     case LOGOUT_USER_SUCCESS:
-      state = { ...state , isUserLogout: true}
+      state = { ...state}
       break
     case API_ERROR:
-      state = { ...state, error: action.payload, loading: false,isUserLogout: false, }
+      state = { ...state, error: action.payload, loading: false }
       break
     default:
       state = { ...state }

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from "react"
 import { Link } from 'react-router-dom';
-import { Container, Row,Col, Card, CardBody, Label, Form, Alert, Input, FormFeedback } from 'reactstrap';
+import { Container, Row,Col, Card, CardBody, Label, Form, Input, FormFeedback } from 'reactstrap';
 import logoDark from "../../assets/images/logo-dark.png";
 import logoLight from "../../assets/images/logo-dark.png";
-import { useSelector, useDispatch } from "react-redux";
-import { createSelector } from "reselect";
+import { useDispatch, useSelector } from "react-redux"
 import PropTypes from "prop-types";
+import { toast, ToastContainer } from "react-toastify"
 
 // Formik validation
 import * as Yup from "yup";
@@ -37,20 +37,17 @@ const Login = props => {
     }
   });
 
-  const selectLoginState = (state) => state.Login;
-    const LoginProperties = createSelector(
-      selectLoginState,
-        (login) => ({
-          error: login.error          
-        })
-    );
+  const error = useSelector(state => state.Login.error);
 
-    const {
-      error
-  } = useSelector(LoginProperties);
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error])
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="account-pages my-5 pt-sm-5">
             <Container>
                 <Row className="justify-content-center">
@@ -76,7 +73,6 @@ const Login = props => {
                                         return false;
                                       }}
                                     >
-                                      {error ? <Alert color="danger">{error}</Alert> : null}
                                         <div className="mb-3">
                                             <Label htmlFor="username">Username</Label>
                                             <Input
@@ -88,7 +84,7 @@ const Login = props => {
                                               onBlur={validation.handleBlur}
                                               value={validation.values.email || ""}
                                               invalid={
-                                                validation.touched.email && validation.errors.email ? true : false
+                                                !!(validation.touched.email && validation.errors.email)
                                               }
                                             />
                                             {validation.touched.email && validation.errors.email ? (
@@ -105,7 +101,7 @@ const Login = props => {
                                               onChange={validation.handleChange}
                                               onBlur={validation.handleBlur}
                                               invalid={
-                                                validation.touched.password && validation.errors.password ? true : false
+                                                !!(validation.touched.password && validation.errors.password)
                                               }
                                             />
                                             {validation.touched.password && validation.errors.password ? (
@@ -114,21 +110,21 @@ const Login = props => {
                                         </div>
                                         <Row className="mb-3 mt-4">
                                             <div className="col-6">
-                                                <div className="form-check">
-                                                    <input type="checkbox" className="form-check-input" id="customControlInline" />
-                                                    <label className="form-check-label" htmlFor="customControlInline">Remember me
-                                                    </label>
-                                                </div>
+                                                {/*<div className="form-check">*/}
+                                                {/*    <input type="checkbox" className="form-check-input" id="customControlInline" />*/}
+                                                {/*    <label className="form-check-label" htmlFor="customControlInline">Remember me*/}
+                                                {/*    </label>*/}
+                                                {/*</div>*/}
                                             </div>
                                             <div className="col-6 text-end">
                                                 <button className="btn btn-primary w-md waves-effect waves-light" type="submit">Log In</button>
                                             </div>
                                         </Row>
-                                        <Row className="form-group mb-0">
-                                            <div className="col-12 mt-4">
-                                                <Link to="/forgot-password" className="text-muted"><i className="mdi mdi-lock"></i> Forgot your password?</Link>
-                                            </div>
-                                        </Row>
+                                        {/*<Row className="form-group mb-0">*/}
+                                        {/*    <div className="col-12 mt-4">*/}
+                                        {/*        <Link to="/forgot-password" className="text-muted"><i className="mdi mdi-lock"></i> Forgot your password?</Link>*/}
+                                        {/*    </div>*/}
+                                        {/*</Row>*/}
                                     </Form>
                                 </div>
                             </CardBody>

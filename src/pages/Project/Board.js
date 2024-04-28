@@ -439,10 +439,9 @@ const Kanban = (props) => {
                                           {...provided.dragHandleProps}
                                           // className="task task-list"
                                           className="pb-1 task-list"
-                                          // style={{display:showTask?'':'none'}}
                                           id={section.title + "-task"}
                                         >
-                                          <div className="card task-box" id="uptask-1">
+                                          <div className="card task-box" id="uptask-1" >
                                             <CardBody>
                                               <UncontrolledDropdown className="float-end">
                                                 <DropdownToggle
