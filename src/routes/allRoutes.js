@@ -26,6 +26,7 @@ import Details from "../pages/Project/Details";
 import Calendar from "../pages/Calendar"
 import AdminSettings from "../pages/Admin/adminSettings"
 import Invite from "../pages/Admin/invite"
+import Chat from "../pages/Chat/Chat"
 
 const userRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -35,6 +36,7 @@ const userRoutes = [
   {path:"/project-board",component:<Board/>},
   {path:"/calendar",component:<Calendar/>},
   {path:'/admin-settings',component:<AdminSettings/>},
+  {path:'/chat',component:<Chat/>},
 
   // this route should be at the end of all other routes
   {

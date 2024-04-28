@@ -16,7 +16,7 @@ import Projects from "./projects/reducer"
 import Tasks from "./tasks/reducer"
 import calendar from "./calendar/reducer"
 import Admin from "./admin/reducer"
-
+import Chat from "./chat/reducer"
 
 const rootReducer = combineReducers({
   // public
@@ -27,6 +27,7 @@ const rootReducer = combineReducers({
   Projects,
   Tasks,
   calendar,
+  Chat,
   // Authentication
   Admin,
   Login,
